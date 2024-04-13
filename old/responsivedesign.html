@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>responsivedesign.html</title>
+    <style>
+        div {
+            border: solid;
+            height: 100px;
+            font-size: 80px;
+            background-color: lime;
+            margin-bottom: 30px;
+        }
+
+        @media all and (min-width:576px) {
+            div {
+                background-color: blue;
+                width: 48%;
+                display: inline-block;
+            }
+
+            @media all and (min-width:768px) {
+                div {
+                    background-color: red;
+                    width: 32%;
+
+                }
+            }
+
+            @media all and (min-width:992px) {
+                div {
+                    background-color: yellow;
+                    width: 16%;
+
+                }
+            }
+
+            p {
+                height: 100px;
+                background: linear-gradient(to right, red, blue, black)
+            }
+
+    </style>
+</head>
+
+<body>
+    <main>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <p></p>
+    </main>
+</body>
+
+</html>
