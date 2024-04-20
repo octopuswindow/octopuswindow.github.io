@@ -55,7 +55,7 @@
 
         body {
             margin: 0;
-            text-align: center;
+            /* text-align: center; */
         }
 
         h1.black {
@@ -92,7 +92,7 @@
 
         }
 
-        a {
+        a.a {
             background-color: transparent;
             padding: 15px;
             outline-color: white;
@@ -104,53 +104,204 @@
             transition: 0.25s;
         }
 
-        a:hover {
+        a.a:hover {
             background-color: white;
             color: rgb(48, 62, 79);
+        }
+
+        a.b:hover {
+            background-color: white;
+            color: rgb(48, 62, 79);
+        }
+
+
+        input {
+            border: none;
+            width: 400px;
+        }
+
+        label {
+            font-family: sans-serif;
+            font-size: 12px;
+            color: #6c757d;
+            transform-origin: 0 0;
+
+
+
+        }
+
+        form {
+            width: 400px;
+            margin: auto;
+        }
+
+        .textaligncenter {
+            text-align: center;
+        }
+
+        hr.grey {
+            color: #6c757d;
+        }
+
+        textarea {
+            border: none;
+            width: 400px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #1abc9c;
+            padding: 15px;
+            outline-style: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-family: sans-serif;
+            border: none;
+            color: white;
+            width: 70px;
+        }
+
+        div.dark {
+            background-color: #2c3e50;
+            margin-top: 60px;
+            padding: 40px;
+        }
+
+        div.verydark {
+            background-color: #1a252f;
+            padding: 0px;
+        }
+
+        .twentyfive {
+            width: 29.1%;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        @media all and (max-width:722px) {
+            p.twentyfive {
+
+                width: 100%;
+                display: inline-block;
+            }
+        }
+
+        i.inv {
+            color: transparent;
+        }
+
+
+        a.b {
+            border-radius: 50%;
+            outline-color: white;
+            outline-style: solid;
+            outline-width: 1px;
+            color: white;
+            padding: 10px;
+            transition: 0.25s;
+            width: 18px;
+        }
+
+        .james {
+            font-size: 10px;
+        }
     </style>
 </head>
 
 <body>
-    <header>
-        <img id="h" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg" alt="">
-        <h1>START BOOTSTRAP</h1>
-        <div class="sep">
-            <hr>
-            <i class="fa-solid fa-star"></i>
-            <hr>
-        </div>
-        <p>Grapic Artist - Web designer - Illustrator</p>
-    </header>
-    <section id="portfolio">
-        <h1 class="black">PORTFOLIO</h1>
+    <div class="textaligncenter">
+        <header>
+            <img id="h" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/avataaars.svg" alt="">
+            <h1>START BOOTSTRAP</h1>
+            <div class="sep">
+                <hr>
+                <i class="fa-solid fa-star"></i>
+                <hr>
+            </div>
+            <p>Grapic Artist - Web designer - Illustrator</p>
+        </header>
+        <section id="portfolio">
+            <h1 class="black">PORTFOLIO</h1>
+            <div class="sep">
+                <hr class="black">
+                <i class="fa-solid fa-star black"></i>
+                <hr class="black">
+            </div>
+            <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cabin.png" alt="">
+            <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cake.png" alt="">
+            <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/circus.png" alt="">
+            <br>
+            <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/game.png" alt="">
+            <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/safe.png" alt="">
+            <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/submarine.png" alt="">
+        </section>
+        <br><br><br>
+        <header>
+            <h1 class="smaller">ABOUT</h1>
+            <div class="sep">
+                <hr>
+                <i class="fa-solid fa-star"></i>
+                <hr>
+            </div>
+            <p>Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization.</p>
+            <p>You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!</p>
+            <br>
+            <br>
+            <a class="a" href="noware_D,:"><i class="fa-solid fa-download"></i> Free Download!</a>
+            <br><br><br>
+
+
+
+        </header>
+        <br>
+        <h1 class="black">CONTACT ME</h1>
         <div class="sep">
             <hr class="black">
             <i class="fa-solid fa-star black"></i>
             <hr class="black">
         </div>
-        <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cabin.png" alt="">
-        <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/cake.png" alt="">
-        <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/circus.png" alt="">
-        <br>
-        <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/game.png" alt="">
-        <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/safe.png" alt="">
-        <img class="small" src="https://startbootstrap.github.io/startbootstrap-freelancer/assets/img/portfolio/submarine.png" alt="">
-    </section>
-    <br><br><br>
-    <header>
-        <h1 class="smaller">ABOUT</h1>
-        <div class="sep">
-            <hr>
-            <i class="fa-solid fa-star"></i>
-            <hr>
-        </div>
-        <p>Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization.</p>
-        <p>You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!</p>
-        <br>
-        <br>
-        <a href="noware_D,:"><i class="fa-solid fa-download"></i> Free Download!</a>
-        <br><br><br>
+    </div>
+    <br>
+    <br>
+    <form action="">
 
+        <label for="username">Full name</label>
+        <br>
+        <input name="username" type="text">
+        <hr class="grey">
+        <br>
+        <label for="email">Email adress</label>
+        <br>
+        <input name="email" type="email">
+        <hr class="grey">
+        <br>
+        <label for="phone">Phone number</label>
+        <br>
+        <input name="phone" type="tel">
+        <hr class="grey">
+        <br>
+        <label for="message">Message</label>
+        <br>
+        <textarea name="message" id="" cols="30" rows="3"></textarea>
+        <hr class="grey">
+        <br>
+        <button>Send</button>
 
-    </header>
+    </form>
+    <div class="dark">
+        <p class="textaligncenter twentyfive"><b>LOCATION</b><br><br>2215 John Daniel Drive <br>Clark, MO</p>
+        <p class="textaligncenter twentyfive"><b>AROUND THE WEB</b><br><br><br><a href="noware_D,:" class="circle b"><i class="inv">j</i><i class="fa-brands fa-facebook-f"></i><i class="inv">j</i></a>
+            <i class="inv">j</i>
+            <a href="noware_D,:" class="circle b"><i class="fa-brands fa-twitter"></i></a>
+            <i class="inv">j</i>
+            <a href="noware_D,:" class="circle b"><i class="fa-brands fa-linkedin-in"></i><i class="inv">j</i></a>
+            <i class="inv">j</i>
+            <a href="noware_D,:" class="circle b"><i class="fa-solid fa-basketball"></i></a>
+        </p>
+        <p class="textaligncenter twentyfive"><b>ABOUT FREELANCER</b><br><br>Freelance is a free to use, MIT <br> licensed Bootstrap theme created <br> by Start Bootstrap .</p>
+
+    </div>
+    <div class="verydark textaligncenter">
+        <p class="james textaligncenter">Copywright &copy; Your Website 2023</p>
+    </div>
 </body></html>
