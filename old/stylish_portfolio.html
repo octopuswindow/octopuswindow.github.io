@@ -234,6 +234,175 @@
             display: inline-block;
         }
 
+        section.g {
+            text-align: center;
+            padding: 74px;
+        }
+
+        h2.whitebg {
+            font-size: 30px;
+            font-weight: 600;
+            color: #212529;
+        }
+
+        div.h {
+            display: inline-block;
+            height: 272px;
+            width: 430px;
+            margin: -2px;
+            background-size: 430px 272px;
+            background-repeat: no-repeat;
+            padding: 60px;
+            align-content: flex-end;
+            background-color: aliceblue;
+            text-align: left;
+            transition: 0.25s;
+            border-color: white;
+            vertical-align: middle;
+            border-width: 0px;
+            border-style: solid;
+            box-sizing: border-box;
+            background-color: rgba(242, 51, 51, 0.37);
+        }
+
+        div.img1 {
+            background-image: url("https://startbootstrap.github.io/startbootstrap-stylish-portfolio/assets/img/portfolio-1.jpg");
+
+        }
+
+        div.img2 {
+            background-image: url("https://startbootstrap.github.io/startbootstrap-stylish-portfolio/assets/img/portfolio-2.jpg");
+
+        }
+
+        div.img3 {
+            background-image: url("https://startbootstrap.github.io/startbootstrap-stylish-portfolio/assets/img/portfolio-3.jpg");
+        }
+
+        div.img4 {
+            background-image: url("https://startbootstrap.github.io/startbootstrap-stylish-portfolio/assets/img/portfolio-4.jpg");
+        }
+
+        h6.i {
+            font-size: 8px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        h5.i {
+            font-size: 12px;
+            font-weight: 100;
+            color: #fff;
+        }
+
+        div.img1:hover {
+            border-width: 25px;
+            border-style: solid;
+            box-sizing: border-box;
+        }
+
+        div.img2:hover {
+            border-width: 25px;
+            border-style: solid;
+            box-sizing: border-box;
+        }
+
+        div.img3:hover {
+            border-width: 25px;
+            border-style: solid;
+            box-sizing: border-box;
+        }
+
+        div.img4:hover {
+            border-width: 25px;
+            border-style: solid;
+            box-sizing: border-box;
+        }
+
+        .coloroverlay {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: .7;
+            position: absolute;
+        }
+
+        h3.j {
+            color: #fff;
+            font-weight: bolder;
+            font-size: 22px;
+        }
+
+        a.j {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            /*             padding-top: 14px;
+            padding-bottom: 14px;
+            padding-right: 20px;
+            padding-left: 20px; */
+            padding: 17px 25px;
+            font-size: 10px;
+            color: #000;
+            text-decoration: none;
+            transition: 0.15s;
+        }
+
+        a.j:hover {
+            background-color: #d3d4d5;
+        }
+
+        a.k {
+            background-color: #212529;
+            border-radius: 5px;
+            /*             padding-top: 14px;
+            padding-bottom: 14px;
+            padding-right: 20px;
+            padding-left: 20px; */
+            padding: 17px 25px;
+            font-size: 10px;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.15s;
+        }
+
+        a.k:hover {
+            background-color: #424649;
+        }
+
+        iframe.fullwidth {
+            width: 100%;
+            height: 300px;
+        }
+
+        div.links {
+            text-align: center;
+            margin: 25px;
+            margin-left: 0%;
+        }
+
+        a.circle {
+            display: inline-block;
+            width: 10px;
+            margin: 17px;
+            align-content: center;
+        }
+
+        i.circle {
+            background-color: #1D809F;
+            border-radius: 50%;
+            display: inline-block;
+            width: 43px;
+            height: 43px;
+            align-content: center;
+            color: white;
+        }
+
+        h6.james {
+            text-align: center;
+            color: #6c757d;
+            font-size: 9px;
+        }
+
         @media all and (min-width:992px) {
             header.a {
 
@@ -252,6 +421,18 @@
         @media all and (max-width:767px) {
             div.iconitem {
                 width: 99%;
+            }
+        }
+
+        @media all and (max-width:1019px) {
+            div.h {
+                margin: 5px;
+            }
+        }
+
+        @media all and (max-width:992px) {
+            iframe.fullwidth {
+                height: 600px;
             }
         }
     </style>
@@ -352,27 +533,83 @@
 
     </header>
 
-    <body>
-        <header class="f">
-            <div class="b">
-                <h2 class="f">Welcome to <i>your</i></h2>
-                <h2 class="f">next website!</h2>
-                <br><br><br>
-                <a href="" class="c">Download Now!</a>
-            </div>
-        </header>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <header class="f">
+        <div class="b">
+            <h2 class="f">Welcome to <i>your</i></h2>
+            <h2 class="f">next website!</h2>
+            <br><br><br>
+            <a href="" class="c">Download Now!</a>
+        </div>
+    </header>
 
-        <script>
-            btn_icon.addEventListener('click', function() {
-                if (this.classList.contains('fa-bars')) {
-                    this.classList.remove('fa-bars');
-                    this.classList.add('fa-xmark');
-                } else {
-                    this.classList.remove('fa-xmark');
-                    this.classList.add('fa-bars');
-                }
-            });
-        </script>
-    </body></html>
+    <section class="g" id="portfolio">
+
+        <h6 class="bluebg">PORTFOLIO</h6><br>
+        <h2 class="whitebg">Recent Projects</h2>
+        <br>
+
+        <div class="h img1">
+
+            <h6 class="i">STATIONARY</h6>
+            <h5 class="i">A yellow pencil with envelopes on a clean, blue backdrop!</h5>
+        </div>
+        <div class="h img2">
+            <h6 class="i">ICE CREAM</h6>
+            <h5 class="i">A dark blue background with a colored pencil, a clip, and a tiny ice cream cone!</h5>
+
+        </div>
+        <br>
+        <div class="h img3">
+            <h6 class="i">STRAWBERRIES</h6>
+            <h5 class="i">Strawberries are such a tasty snack, especially with a little sugar on top!</h5>
+
+        </div>
+        <div class="h img4">
+            <h6 class="i">WORKSPACE</h6>
+            <h5 class="i">A yellow workspace with some scissors, pencils, and other objects.</h5>
+        </div>
+
+
+    </section>
+    <header class="bluebg" id="Services">
+        <h3 class="j">The buttons below are impossible to resist...</h3>
+        <br>
+        <a href="" class="j">Click Me!</a>
+        <a href="" class="k">Look at Me!</a>
+    </header>
+
+    <iframe class="fullwidth" src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;aq=0&amp;oq=twitter&amp;sll=28.659344,-81.187888&amp;sspn=0.128789,0.264187&amp;ie=UTF8&amp;hq=Twitter,+Inc.,+Market+Street,+San+Francisco,+CA&amp;t=m&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe>
+
+    <section class="james">
+
+        <div class="links">
+
+            <a class="circle" href=""><i class="icon-social-facebook circle"></i></a>
+            <a class="circle" href=""><i class="icon-social-twitter circle"></i></a>
+            <a class="circle" href=""><i class="icon-social-github circle"></i></a>
+
+        </div>
+        <div class="james">
+            <h6 class="james">Copyright &copy; Your Website 2023</h6>
+        </div>
+        <br>
+        <br>
+    </section>
+
+    <!--html end-->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+    <script>
+        btn_icon.addEventListener('click', function() {
+            if (this.classList.contains('fa-bars')) {
+                this.classList.remove('fa-bars');
+                this.classList.add('fa-xmark');
+            } else {
+                this.classList.remove('fa-xmark');
+                this.classList.add('fa-bars');
+            }
+        });
+    </script>
+</body></html>
