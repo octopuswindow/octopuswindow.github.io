@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>s</title>
+    <style>
+        div {
+            border: solid 50px;
+            width: 300px;
+            height: 200px;
+            border-image: url(../images/borderimage.png);
+            /* image-slice defines how much size of image for border corners */
+
+            border-image-slice: 27;
+            /*             border-image-repeat: repeat; */
+            transition: 1s;
+        }
+
+        img {
+            width: 150px;
+            margin-top: 100px;
+        }
+
+        div:hover {
+            border-image-slice: 40;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div></div>
+
+    <img src="../images/borderimage.png" alt="">
+</body></html>
