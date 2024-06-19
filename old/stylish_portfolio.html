@@ -403,6 +403,24 @@
             font-size: 9px;
         }
 
+        button#button_top {
+            position: fixed;
+            right: 10px;
+            top: 95%;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 14px;
+            font-size: 12px;
+            border-style: none;
+            border-radius: 5px;
+            z-index: 0;
+        }
+
+        a#jame2 {
+            color: white;
+            text-decoration: none;
+        }
+
         @media all and (min-width:992px) {
             header.a {
 
@@ -435,13 +453,17 @@
                 height: 600px;
             }
         }
-
     </style>
 </head>
 
 <body>
     <button id='toggle_offcanvas' class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
         <i id='btn_icon' class="fa-solid fa-bars"></i>
+    </button>
+
+    <button id='button_top' class="" type="button">
+        <a id='jame2' class="fa-solid fa-chevron-up" href=""></a>
+
     </button>
 
     <div class="offcanvas offcanvas-end" data-bs-backdrop="false" data-bs-backdrop="static" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
@@ -612,8 +634,5 @@
                 this.classList.add('fa-bars');
             }
         });
-
     </script>
-</body>
-
-</html>
+</body></html>
