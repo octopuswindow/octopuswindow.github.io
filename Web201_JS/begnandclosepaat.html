@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #canvas {
+            border: solid lightseagreen 4px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+    let canvas=document.querySelector('#canvas');
+    let ctx = canvas.getContext('2d');
+    //path: rect, arc, line, text .....
+
+    ctx.moveTo(50,50);
+    ctx.lineTo(250,50);
+    ctx.lineTo(250,200);
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+
+    //ctx.rect(50,50,200,100);
+    //ctx.fillStyle = 'red';
+    //ctx.fill();
+    
+    //begin to collect path
+    
+    ctx.beginPath();
+    ctx.moveTo(50,350); // start point
+    ctx.lineTo(250,350);
+    ctx.lineTo(250,450);
+    ctx.strokeStyle = 'red';
+    ctx.closePath();
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(400,200,50,0,Math.PI/2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(400,300,50,0,Math.PI/2);
+    ctx.fill();
+    
+    //ctx.beginPath();
+    //ctx.rect(50, 350, 200, 100)
+    //ctx.fillStyle = 'blue';
+    //ctx.fill();
+
+    /* multiline
+    commennts */
+    </script>
+
+</body>
+</html>

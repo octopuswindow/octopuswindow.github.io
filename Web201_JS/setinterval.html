@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let e = 0
+        setInterval(function() {
+        document.write(e+'\n');
+        e += 1;
+        },1000);
+
+        (function loop() {
+            // tell browser to call loop function when refresh
+            requestAnimationFrame(loop);
+            console.log('fresjhframe');
+        })()
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #canvas {
+            border: solid lightseagreen 4px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+    //    console.dir(canvas);
+    let canvas=document.querySelector('#canvas');
+    let ctx = canvas.getContext('2d');
+
+    // outline
+    ctx.rect(100,200,200,100);
+    ctx.fillStyle='red';
+    ctx.fill();
+    //
+    ctx.fillStyle='blue';
+    ctx.fillRect(100,50,200,100);
+    </script>
+
+</body>
+</html>

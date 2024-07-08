@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #canvas {
+            border: solid lightseagreen 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+        let canvas = document.querySelector('#canvas');
+        let ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'lightseagreen';
+
+        //reformat code: shift-alt-f (win) shift option f (mac)
+        let paddle = {
+            x: canvas.width / 2 - 80,
+            y: canvas.height - 20,
+            w: 160,
+            h: 20,
+            draw: function () {
+                ctx.beginPath();
+                ctx.rect(this.x, this.y, this.w, this.h);
+                ctx.fillStyle = 'black';
+                ctx.fill();
+            }
+        }
+
+        paddle.draw();
+
+        let ball = {
+            x: canvas.width / 2,
+            y: canvas.height - 15 - paddle.h,
+            r: 15,
+            vx: 5,
+            vy: 2,
+            draw: function () {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'blue';
+                ctx.fill();
+            },
+            update: function() {
+                this.x-=this.vx;
+                this.y-=this.vy;
+
+                if (this.x < 15 || this.x > canvas.width - 15) {
+                    this.vx=this.vx*-1;
+                }
+                if (this.y < 15) {
+                    this.vy=this.vy*-1;
+                }
+            }
+        }
+        ball.update();
+        ball.draw();
+
+        //game loop
+        function loop() {
+            requestAnimationFrame(loop);
+            //clear
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+            //draw
+            paddle.draw();
+            ball.draw();
+
+            //update
+            ball.update();
+
+        }
+        
+        loop();
+
+        //paddle
+        ///ctx.fillRect(250,580,100,20);
+        //ball
+        ///ctx.beginPath();
+        ///ctx.arc(300,570,10,0,Math.PI*2);
+        ///ctx.fill();
+
+    </script>
+</body>
+
+</html>

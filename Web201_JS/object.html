@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        person={
+            name: 'Joe',
+            age: 20,
+            hobbies: ['hiking', 'talking','pickleball'],
+            getInfo: function() {
+                return name+" with age "+age;
+            }
+        }
+        console.log(person);
+        console.table(person);
+
+        //create, read, update, delete
+        console.log(person.name);
+        person.name='john';
+        delete person.name;
+        person['adress']='london';
+        console.log(person);
+
+        // copy object
+        a={
+            key1:'v1',
+            key2:'v2',
+            key3: {}
+        }
+        b={
+            ...a
+        }
+        console.log(b);
+        console.log(a.key3==b.key3);
+
+        c=structuredClone(a);
+        console.log(c.key3==a.key3);
+    </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+
+        function add(a,b) {
+            return a+b;
+        }
+
+        c=add(100,200);
+        console.log(c);
+        
+        //javascript doesn't tell you errors?
+        c=add(100);
+        console.log(c); //NaN not a number
+
+        c=add(100,200,300);
+        console.log(); // additional parameter atto ignored
+
+        //auto invoke
+        a=(function subtract(a,b) {
+            return a-b;
+        }(100,200));
+        console.log(a)
+
+
+
+
+    </script>
+
+</body>
+</html>
