@@ -19,17 +19,51 @@
         let ctx = canvas.getContext('2d');
         ctx.fillStyle = 'lightseagreen';
 
+        // eventst
+        let left = null;
+        let right = null;
+
+        window.addEventListener('keydown', function (e) {
+            if (e.code === "ArrowLeft") {
+                left = true;
+            }
+            else if (e.code === "ArrowRight") {
+                right = true;
+            }
+            else if (e.code==='Space') {
+                pause=!pause;
+            }
+        });
+
+        window.addEventListener('keyup', function (e) {
+            if (e.code === "ArrowLeft") {
+                left = false;
+            }
+            else if (e.code === "ArrowRight") {
+                right = false;
+            }
+        });
+
         //reformat code: shift-alt-f (win) shift option f (mac)
         let paddle = {
             x: canvas.width / 2 - 80,
             y: canvas.height - 20,
             w: 160,
             h: 20,
+            vx: 5,
             draw: function () {
                 ctx.beginPath();
                 ctx.rect(this.x, this.y, this.w, this.h);
                 ctx.fillStyle = 'black';
                 ctx.fill();
+            },
+            update: function () {
+                if (left === true && this.x > 0) {
+                    this.x -= this.vx;
+                }
+                if (right === true && this.x < canvas.width - this.w) {
+                    this.x += this.vx;
+                }
             }
         }
 
@@ -47,26 +81,28 @@
                 ctx.fillStyle = 'blue';
                 ctx.fill();
             },
-            update: function() {
-                this.x-=this.vx;
-                this.y-=this.vy;
+            update: function () {
+                this.x -= this.vx;
+                this.y -= this.vy;
 
                 if (this.x < 15 || this.x > canvas.width - 15) {
-                    this.vx=this.vx*-1;
+                    this.vx = this.vx * -1;
                 }
                 if (this.y < 15) {
-                    this.vy=this.vy*-1;
+                    this.vy = this.vy * -1;
                 }
             }
         }
-        ball.update();
+        //ball.update();
         ball.draw();
 
+        let pause=false;
         //game loop
         function loop() {
             requestAnimationFrame(loop);
+            if (pause) return;
             //clear
-            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             //draw
             paddle.draw();
@@ -74,9 +110,10 @@
 
             //update
             ball.update();
+            paddle.update();
 
         }
-        
+
         loop();
 
         //paddle
