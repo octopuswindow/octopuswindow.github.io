@@ -82,8 +82,7 @@
                 ctx.fill();
             },
             update: function () {
-                this.x -= this.vx;
-                this.y -= this.vy;
+
 
                 if (this.x < 15 || this.x > canvas.width - 15) {
                     this.vx = this.vx * -1;
@@ -91,6 +90,13 @@
                 if (this.y < 15) {
                     this.vy = this.vy * -1;
                 }
+
+                if (this.y+this.r>paddle.y) {
+                    console.log('ball hit paddle');
+                    this. vy*=-1;
+                }
+                this.x -= this.vx;
+                this.y -= this.vy;
             }
         }
         //ball.update();
