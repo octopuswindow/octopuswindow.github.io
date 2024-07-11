@@ -99,14 +99,14 @@
                     console.log('ball hit paddle');
 
                     let hitX=ball.x-paddle.x;
-                    console.log(hitX);
+                    //console.log(hitX);
                     let angle=maxAngle-Math.floor((maxAngle-minAngle)/paddle.w*hitX);
-                    console.log(angle);
+                    //console.log(angle);
                     let energy=(this.vx**2+this.vy**2)**0.5;
-                    console.log(energy);
+                    //console.log(energy);
                     this.vx=energy*Math.cos(angle*Math.PI/180);
                     this.vy=-energy*Math.sin(angle*Math.PI/180);
-                    console.log(this.vx,this.vy);
+                    //console.log(this.vx,this.vy);
 
 
                     //this. vy*=-1;

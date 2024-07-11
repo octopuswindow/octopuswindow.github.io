@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    canvas {
+      border: solid 10px #66ba66;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id='canvas' width=600 height=600></canvas>
+  <script>
+    var canvas = document.querySelector('canvas');
+    var ctx = canvas.getContext('2d');
+
+    // events
+    canvas.addEventListener('mousemove',function(e){
+      let mx=e.offsetX;
+      let my=e.offsetY;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      circle.update(mx,my);
+      circle.draw();
+      rect.draw();
+    });
+
+        // rect
+        rect = {
+      x:200,
+      y:200,
+      w:200,
+      h:100,
+      draw: function(){
+        ctx.beginPath();
+        ctx.rect(this.x,this.y,this.w,this.h);
+        ctx.fillStyle='blue';
+        ctx.fill();
+      }
+    }
+    rect.draw();
+
+    // circle
+        // object style
+      let circle = {
+      x: 200,
+      y: 150,
+      r: 50,
+      draw: function () {
+
+/*        if (this.y+this.r<rect.y) {
+            color='red';
+        }
+        else if (this.x+this.r<rect.x) {
+            color='green';
+        }
+        else if (this.x-this.r>rect.x+rect.w) {
+            color='cyan';
+        }
+        else if (this.y-this.r>rect.y+rect.h) {
+            color='purple';
+        }
+
+        else {
+            color='black'
+        };
+        */
+        
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      },
+      update: function(mx,my) {
+        this.x=mx;
+        this.y=my;
+      }
+    }
+    circle.draw();
+
+
+
+  </script>
+
+</body>
+
+</html>

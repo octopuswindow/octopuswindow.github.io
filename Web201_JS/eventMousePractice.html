@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #canvas {
+            border: solid lightseagreen 4px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+    let canvas=document.querySelector('#canvas');
+    let ctx = canvas.getContext('2d');
+
+    canvas.addEventListener('mousemove',function(e) {
+        //console.log("mouse is at",e.clientX,e.clientY);
+        /*
+        if (Math.sqrt((Math.abs(e.clientX-300)*(Math.abs(e.clientX-300)))+((Math.abs(e.clientY-300))*(Math.abs(e.clientY-300))))<50) {
+            console.log("in circle");
+            ctx.beginPath();
+            ctx.arc(300, 300, 50, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(300, 300, 25, 0, Math.PI * 2);
+            ctx.fill()
+        }
+            */
+        if (50-Math.sqrt((Math.abs(e.clientX-300)*(Math.abs(e.clientX-300)))+((Math.abs(e.clientY-300))*(Math.abs(e.clientY-300))))>0) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.arc(300, 300, 50-Math.sqrt((Math.abs(e.clientX-300)*(Math.abs(e.clientX-300)))+((Math.abs(e.clientY-300))*(Math.abs(e.clientY-300))))+50, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    });
+    </script>
+
+</body>
+</html>
