@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        let a = [1, 2, 3]
+        //properties
+        console.log(a.length);
+
+        //methods: push(), pop(index) (no error, but equals pop()); unshift(100) (add to beginning), shift();
+        a.push(4); // [1,2,3,4]
+        console.log(a);
+        a.pop(); // [1,2,3]
+        console.log(a);
+        a.unshift(100);
+        console.log(a);
+        a.shift()
+        console.log(a);
+
+        a.splice(1, 1, 100);
+        console.log(a);
+
+        b=new Array(10);
+        console.log(b);
+
+        c=['a', 'b', 'c'];
+        console.log(c[1]);
+    </script>
+</body>
+
+</html>
