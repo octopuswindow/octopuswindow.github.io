@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #canvas {
+            border: solid lightseagreen 4px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+    let canvas=document.querySelector('#canvas');
+    let ctx = canvas.getContext('2d');
+
+
+    //
+    ctx.font="60px monospace"
+    ctx.fillStyle='blue';
+    ctx.fillText("Hello", 50,50);
+    </script>
+
+</body>
+</html>
