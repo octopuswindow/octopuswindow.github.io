@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #canvas {
+            border: solid lightseagreen 4px;
+        }
+
+    </style>
+</head>
+<body>
+    <audio id="audio" controls src="miracle_2-ilya_truhanov.mp3"></audio>
+    
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+        pause.addEventListener("cl")
+    let canvas=document.querySelector('#canvas');
+    let ctx = canvas.getContext('2d');
+
+    /*
+    1 properties
+    2 methods
+    3 events
+    */
+   let audio=document.querySelector('#audio');
+
+//        audio.addEventListener('loadedmetadata', function () {
+        audio.play();
+        audio.volume=0.1;
+        ctx.fillText(audio.src,50,50);
+        ctx.fillText(audio.duration,50,100);
+
+    });
+    audio.addEventListener('play', function(){
+        ctx.fillText("playing",50,150);
+
+    });
+    audio.addEventListener('pause', function(){
+        ctx.fillText("paused",50,200);
+
+    });
+    audio.addEventListener('volumechange', function(){
+        ctx.fillText(audio.volume,50,250);
+
+    });
+    audio.addEventListener('ended', function(){
+        ctx.fillText("ended",50,300);
+
+    });
+    audio.addEventLstener('audio.timeupdate', function() {
+        fresh();
+        ctx.fillText(audio.currentTime,50,300);
+        
+    });
+
+    function french() {
+        ctx.fillText(audio.src,50,50);
+        ctx.fillText(audio.duration,50,100);
+        ctx.fillText("playing",50,150);
+        ctx.fillText("paused",50,200);
+        ctx.fillText(audio.volume,50,250);
+        ctx.fillText("ended",50,300);
+        ctx.fillText(audio.currentTime,50,300);
+    }
+
+    </script>
+
+</body>
+</html>

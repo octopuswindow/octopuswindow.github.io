@@ -8,7 +8,7 @@
     <style>
         #canvas {
             border: solid lightseagreen 4px;
-        }
+            }
     </style>
 </head>
 
@@ -18,6 +18,13 @@
         let canvas = document.querySelector('#canvas');
         let ctx = canvas.getContext('2d');
         ctx.fillStyle = 'lightseagreen';
+
+        // bounce sfx
+        let bounce=new Audio("bounce.mp3");
+        function playbounce() {
+            let a=bounce.cloneNode();
+            a.play();
+        };
 
         // eventst
         let left = null;
@@ -106,6 +113,7 @@
                     if (this.exist == true) {
                         ball.vy = ball.vy * -1;
                         this.exist = false
+                        score += 10;
                         ball.update();
                     }
                 }
@@ -113,6 +121,7 @@
                     if (this.exist == true) {
                         ball.vx = ball.vx * -1;
                         this.exist = false
+                        score += 10;
                         ball.update();
                     }
                 }
@@ -211,6 +220,7 @@
                     this.vx = energy * Math.cos(angle * Math.PI / 180);
                     this.vy = -energy * Math.sin(angle * Math.PI / 180);
                     //console.log(this.vx,this.vy);
+                    playbounce();
 
 
                     //this. vy*=-1;
@@ -231,11 +241,17 @@
                 */
 
 
-                if (this.x < 15 || this.x > canvas.width - 15) {
-                    this.vx = this.vx * -1;
+                if (this.x < this.r) {
+                    this.vx = Math.abs(this.vx);
+                    playbounce();
+                }
+                if (this.x > canvas.width - this.r) {
+                    this.vx = Math.abs(this.vx) * -1;
+                    playbounce();
                 }
                 if (this.y < 15) {
-                    this.vy = this.vy * -1;
+                    this.vy = Math.abs(this.vy);
+                    playbounce();
                 }
 
                 this.x += this.vx;
@@ -252,6 +268,10 @@
             ctx.fillStyle = color;
             ctx.fillText(text, x, y);
         }
+        // background
+        let bg=new Image();
+        bg.src="breakout_bg.avif";
+
         let score = 0;
 
         createBlocks(3, 10);
@@ -260,9 +280,11 @@
         //game loop
         function loop() {
             requestAnimationFrame(loop);
+            
             if (pause) return;
             //clear
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(bg, 0 , 0);
 
             //draw
             block.draw();
@@ -281,12 +303,14 @@
                 blocks[item].update();
                 if (blocks[item].exist == false) {
                     blocks.splice(item, 1);
+                    playbounce();
                     //console.log("fsd");
-                    score += 10;
+                    
                 }
             }
             ball.update();
             paddle.update();
+            
 
 
 
