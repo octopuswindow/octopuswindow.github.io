@@ -200,6 +200,14 @@
         function doTopCollision(ball, rect) {
             return ball.y + ball.r > rect.y && ball.x >= rect.x && ball.x <= rect.x + rect.w;
         };
+        let go = true;
+        function gameOver() {
+            go = false;
+            ctx.font="30px Sans-Serif";
+            ctx.textAlign="center";
+            ctx.textBaseLine="middle";
+            ctx.fillText('gam over! press "s" to start',canvas.width/2,canvas.height/2);
+        };
         //ball
         let maxAngle = 160;
         let minAngle = 20;
@@ -256,6 +264,7 @@
                 */
 
 
+
                 if (this.x < this.r) {
                     this.vx = Math.abs(this.vx);
                     playbounce();
@@ -267,6 +276,9 @@
                 if (this.y < 15) {
                     this.vy = Math.abs(this.vy);
                     playbounce();
+                }
+                if (this.y > canvas.height) {
+                    gameOver();
                 }
 
                 this.x += this.vx;
@@ -293,8 +305,9 @@
         let pause = false;
         //game loop
         function loop() {
-            requestAnimationFrame(loop);
-            
+            if (go) {
+                requestAnimationFrame(loop);
+            }
             if (pause) return;
             //clear
             ctx.clearRect(0, 0, canvas.width, canvas.height);
