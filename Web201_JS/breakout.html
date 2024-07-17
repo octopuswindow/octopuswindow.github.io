@@ -6,15 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        #canvas {
+        canvas {
             border: solid lightseagreen 4px;
             }
+        #background {
+                position: absolute;
+            }
+        #canvas {
+            position:absolute;
+        }
     </style>
 </head>
 
 <body>
+    <canvas id="background" width="600" height="600"></canvas>
     <canvas id="canvas" width="600" height="600"></canvas>
     <script>
+        var bgCanvas=document.querySelector('#background')
+        var c=bgCanvas.getContext('2d');
+        let bg=new Image();
+        bg.src="breakout_bg.avif";
+        bg.addEventListener('load', function(){
+            c.drawImage(bg, 0 , 0, bgCanvas.width, bgCanvas.height);
+        })
+
         let canvas = document.querySelector('#canvas');
         let ctx = canvas.getContext('2d');
         ctx.fillStyle = 'lightseagreen';
@@ -113,7 +128,7 @@
                     if (this.exist == true) {
                         ball.vy = ball.vy * -1;
                         this.exist = false
-                        score += 10;
+                        //score += 10;
                         ball.update();
                     }
                 }
@@ -121,7 +136,7 @@
                     if (this.exist == true) {
                         ball.vx = ball.vx * -1;
                         this.exist = false
-                        score += 10;
+                        //score += 10;
                         ball.update();
                     }
                 }
@@ -269,8 +284,7 @@
             ctx.fillText(text, x, y);
         }
         // background
-        let bg=new Image();
-        bg.src="breakout_bg.avif";
+
 
         let score = 0;
 
@@ -284,7 +298,7 @@
             if (pause) return;
             //clear
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(bg, 0 , 0);
+
 
             //draw
             block.draw();
