@@ -8,12 +8,14 @@
     <style>
         canvas {
             border: solid lightseagreen 4px;
-            }
+        }
+
         #background {
-                position: absolute;
-            }
+            position: absolute;
+        }
+
         #canvas {
-            position:absolute;
+            position: absolute;
         }
     </style>
 </head>
@@ -22,12 +24,12 @@
     <canvas id="background" width="600" height="600"></canvas>
     <canvas id="canvas" width="600" height="600"></canvas>
     <script>
-        var bgCanvas=document.querySelector('#background')
-        var c=bgCanvas.getContext('2d');
-        let bg=new Image();
-        bg.src="breakout_bg.avif";
-        bg.addEventListener('load', function(){
-            c.drawImage(bg, 0 , 0, bgCanvas.width, bgCanvas.height);
+        var bgCanvas = document.querySelector('#background')
+        var c = bgCanvas.getContext('2d');
+        let bg = new Image();
+        bg.src = "breakout_bg.avif";
+        bg.addEventListener('load', function () {
+            c.drawImage(bg, 0, 0, bgCanvas.width, bgCanvas.height);
         })
 
         let canvas = document.querySelector('#canvas');
@@ -35,15 +37,16 @@
         ctx.fillStyle = 'lightseagreen';
 
         // bounce sfx
-        let bounce=new Audio("bounce.mp3");
+        let bounce = new Audio("bounce.mp3");
         function playbounce() {
-            let a=bounce.cloneNode();
+            let a = bounce.cloneNode();
             a.play();
         };
 
         // eventst
         let left = null;
         let right = null;
+
 
         window.addEventListener('keydown', function (e) {
             if (e.code === "ArrowLeft") {
@@ -54,6 +57,24 @@
             }
             else if (e.code === 'Space') {
                 pause = !pause;
+            }
+            else if (e.code === 'KeyS') {
+                console.log('efsdf');
+                if (go === false) {
+                    console.log('2');
+                    ball.init();
+                    paddle.init();
+                    blocks = [];
+                    block.exist = true;
+                    createBlocks(rows, columns);
+                    block.exist = false;
+                    for (item in blocks) {
+                        blocks[item].init();
+                    }
+                    go = true;
+
+
+                }
             }
         });
 
@@ -108,6 +129,8 @@
                 || Math.sqrt((((rect.x + rect.w - circle.x) * (rect.x + rect.w - circle.x)) + ((rect.y - circle.y) * (rect.y - circle.y)))) < circle.r
                 || Math.sqrt((((rect.x - circle.x) * (rect.x - circle.x)) + ((rect.y + rect.h - circle.y) * (rect.y + rect.h - circle.y)))) < circle.r;
         }
+
+
         //reformat code: shift-alt-f (win) shift option f (mac)
 
         block = {
@@ -116,10 +139,19 @@
             w: 80,
             h: 20,
             exist: true,
+            g: null,
+            init: function () {
+                console.log('j');
+                this.g = ctx.createLinearGradient(this.x, this.y, this.x+this.w, this.y+this.h);
+                this.g.addColorStop(0, 'lightseagreen');
+                this.g.addColorStop(1, 'white');
+                console.log(this.g);
+            },
             draw: function () {
                 if (!this.exist) { return };
                 ctx.beginPath();
-                ctx.fillStyle = "lightseagreen";
+
+                ctx.fillStyle = this.g;
                 ctx.rect(this.x, this.y, this.w, this.h);
                 ctx.fill();
             },
@@ -179,6 +211,13 @@
             w: 160,
             h: 20,
             vx: 5,
+            init: function () {
+                this.x = canvas.width / 2 - 80;
+                this.y = canvas.height - 20;
+                this.w = 160;
+                this.h = 20;
+                this.vx = 5;
+            },
             draw: function () {
                 ctx.beginPath();
                 ctx.rect(this.x, this.y, this.w, this.h);
@@ -203,25 +242,37 @@
         let go = true;
         function gameOver() {
             go = false;
-            ctx.font="30px Sans-Serif";
-            ctx.textAlign="center";
-            ctx.textBaseLine="middle";
-            ctx.fillText('gam over! press "s" to start',canvas.width/2,canvas.height/2);
+            ctx.font = "30px Sans-Serif";
+            ctx.textAlign = "center";
+            ctx.textBaseLine = "middle";
+            ctx.fillText('gam over! press "s" to start', canvas.width / 2, canvas.height / 2);
         };
         //ball
         let maxAngle = 160;
         let minAngle = 20;
 
         let ball = {
-            x: canvas.width / 2,
+            x: x = canvas.width / 2,
             y: canvas.height - 15 - paddle.h,
             r: 15,
             vx: 5,
             vy: -2,
+            rg: null,
+            init: function () {
+                this.x = canvas.width / 2;
+                this.y = canvas.height - 15 - paddle.h;
+                this.r = 15;
+                this.vx = 5;
+                this.vy = -2;
+
+            },
             draw: function () {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                ctx.fillStyle = 'blue';
+                this.rg=ctx.createRadialGradient(this.x+5,this.y-5,0,this.x,this.y,this.r);
+                this.rg.addColorStop(0,'lightblue');
+                this.rg.addColorStop(1,"blue");
+                ctx.fillStyle = this.rg;
                 ctx.fill();
             },
             update: function () {
@@ -277,7 +328,7 @@
                     this.vy = Math.abs(this.vy);
                     playbounce();
                 }
-                if (this.y > canvas.height) {
+                if (this.y - this.r > canvas.height) {
                     gameOver();
                 }
 
@@ -300,15 +351,21 @@
 
         let score = 0;
 
-        createBlocks(3, 10);
+        let rows = 3;
+        let columns = 10;
+
+        createBlocks(rows, columns);
         block.exist = false;
         let pause = false;
+
+        for (item in blocks) {
+            blocks[item].init();
+        }
         //game loop
         function loop() {
-            if (go) {
-                requestAnimationFrame(loop);
-            }
+            requestAnimationFrame(loop);
             if (pause) return;
+            if (go === false) return;
             //clear
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -321,7 +378,7 @@
             }
             paddle.draw();
             ball.draw();
-            drawText(score ,10,20, "lightseagreen")
+            drawText(score, 10, 20, "lightseagreen")
 
             //update
 
@@ -332,12 +389,12 @@
                     blocks.splice(item, 1);
                     playbounce();
                     //console.log("fsd");
-                    
+
                 }
             }
             ball.update();
             paddle.update();
-            
+
 
 
 
