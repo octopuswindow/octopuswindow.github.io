@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>breakout</title>
+  <style>
+    canvas {
+      border: solid 10px #66ba66;
+    }
+
+    #background {
+      position: absolute;
+    }
+
+    #canvas {
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 
+  create variable: level
+  if break all blocks, increase level, and init game for the new level
+  -->
+  <canvas id="background" width="450" height="600"></canvas>
+  <canvas id='canvas' width=450 height=600></canvas>
+
+  <script src="debug.js"></script>
+  <script>
+    // draw background
+    var bgCanvas = document.querySelector('#background');
+    var c = bgCanvas.getContext('2d');
+    let bg = new Image();
+    bg.src = "breakout_bg.avif";
+    bg.addEventListener('load', function () {
+      c.drawImage(bg, 0, 0, bgCanvas.width, bgCanvas.height);
+    });
+
+    // draw game
+    var canvas = document.querySelector('#canvas');
+    var ctx = canvas.getContext('2d');
+
+    // audio
+    let audioBounce = new Audio('./bounce.mp3');
+    audioBounce.addEventListener('loadedmetadata', function () {
+    });
+    function play(audio) {
+      // audio.volume = 0.0;
+      // let a = audio.cloneNode();
+      // a.play();
+    }
+
+    // events
+    window.addEventListener('keydown', function (e) {
+      console.log(e.code);
+    });
+
+    let left = null;
+    let right = null;
+
+    window.addEventListener('keydown', function (e) {
+      if (e.code === "ArrowLeft") {
+        left = true;
+      }
+      else if (e.code === "ArrowRight") {
+        right = true;
+      } else if (e.code === 'KeyP') {
+        pause = !pause; // toggle the value
+      } else if (e.code === 'Space') {
+        gameStartFlag=true;
+        gameoverFlag=false;
+      } else if (e.code==='KeyS') {
+        gameoverFlag=false;
+        ball.init();
+        paddle.init();
+      }
+    });
+
+    window.addEventListener('keyup', function (e) {
+      if (e.code === "ArrowLeft") {
+        left = false;
+      }
+      else if (e.code === "ArrowRight") {
+        right = false;
+      }
+    });
+
+    //
+    function collisionOnTop(circle, rect) {
+      return circle.x >= rect.x // left edge
+        && circle.x <= rect.x + rect.w // right edge
+        && circle.y + circle.r >= rect.y // hit on top
+        && circle.y + circle.r < rect.y + rect.h;
+    }
+    function collisionOnLeft(circle, rect) {
+      return circle.x + circle.r >= rect.x &&
+        circle.y >= rect.y &&
+        circle.y <= rect.y + rect.h &&
+        circle.x + circle.r < rect.x + rect.w;
+    }
+    function collisionOnRight(circle, rect) {
+      return circle.x - circle.r <= rect.x + rect.w // left edge of the ball less than the right edge of the rect
+        && circle.y >= rect.y
+        && circle.y <= rect.y + rect.h
+        && circle.x - circle.r > rect.x;
+    }
+    function collisionOnBottom(circle, rect) {
+      if (circle.y - circle.r <= rect.y + rect.h
+        && circle.x >= rect.x
+        && circle.x <= rect.x + rect.w
+        && circle.y - circle.r > rect.y) {
+        console.log("Collision on bottom")
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    // write text
+    function drawText(text, x, y, color) {
+      ctx.beginPath();
+      ctx.textAlign = 'center';
+      ctx.textBaseLine = 'middle';
+      ctx.font = "20px monospace";
+      ctx.fillStyle = color;
+      ctx.fillText(text, x, y);
+    }
+
+    // block
+    block = {
+      r: 0,
+      c: 0,
+      x: 200,
+      y: 100,
+      w: 80,
+      h: 20,
+      exist: true,
+      draw: function () {
+        if (!this.exist) return;
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.w, this.h);
+        let g=ctx.createLinearGradient(this.x,this.y,this.x+this.w,this.y+this.h);
+        g.addColorStop(0,'orange');
+        g.addColorStop(1,'red');
+        
+        ctx.fillStyle=g;
+        ctx.fill();
+      },
+      update: function () {
+      }
+    }
+
+    // 3,10
+    function createBlocks(rows, cols) {
+      let blocks = [];
+      for (let r = 0; r < rows; r++) {
+        let newRow = [];
+        for (let c = 0; c < cols; c++) {
+          let b = { ...block };
+          // row, col -> b.x, b.y
+          /*
+          x = col * (w+30)
+          y = row * (h+20)
+          */
+          b.r = r;
+          b.c = c;
+          b.x = c * (b.w + 30) + 50;
+          b.y = r * (b.h + 20) + 50;
+          newRow.push(b);
+        }
+        blocks.push(newRow);
+      }
+      return blocks;
+    }
+
+    let level=1;
+    let rows = 1;
+    let cols = 3;
+    let numOfBricks=rows*cols;
+
+    let blocks = createBlocks(rows, cols);
+    console.log(blocks);
+
+    // paddle
+    let paddle = {
+      x: canvas.width / 2 - 80,
+      y: canvas.height - 20,
+      w: 160,
+      h: 20,
+      dx: 5,
+      init: function () {
+        this.x = canvas.width / 2 - this.w / 2;
+        this.y = canvas.height - this.h;
+      },
+      draw: function () {
+        ctx.beginPath();
+        ctx.rect(this.x, this.y, this.w, this.h);
+        ctx.fillStyle = 'black';
+        ctx.fill();
+      },
+      update: function () {
+        if (left) {
+          if (this.x - this.dx >= 0) {
+            this.x -= this.dx;
+            if (!gameStartFlag) {
+              ball.x -= this.dx;
+            }
+          }
+        }
+        if (right) {
+          if (this.x + this.w + this.dx <= canvas.width) {
+            this.x += this.dx;
+            if (!gameStartFlag) {
+              ball.x += this.dx;
+            }
+          }
+        }
+      }
+    }
+
+    paddle.draw();
+
+    // game over
+    let gameoverFlag = false;
+    let gameStartFlag = false;
+    function gameover() {
+      gameoverFlag = true;
+      gameStartFlag=false;
+      drawText('Game over! Press "S" to start', canvas.width / 2, canvas.height / 2);
+    }
+
+    //
+    function gameInit() {
+      /*
+        draw bricks
+        reset ball and paddle
+      */
+     rows++;
+     blocks= createBlocks(rows,cols);
+     ball.init();
+     paddle.init();
+
+     gameStartFlag=false;
+    }
+
+    // ball
+    let maxAngle = 160;
+    let minAngle = 20;
+
+    // 
+    let ball = {
+      x: canvas.width / 2,
+      y: canvas.height - paddle.h - 15 - 2,
+      dx: 0, // delta x
+      dy: -5,
+      r: 15,
+      init: function () {
+        this.x = canvas.width / 2;
+        this.y = canvas.height - paddle.h - this.r - 2;
+        this.dx = 0;
+        this.dy = -5;
+      },
+      draw: function () {
+        ctx.beginPath();
+        // ctx.fillStyle = 'blue';
+        //
+        let g=ctx.createRadialGradient(this.x-5,this.y-5,this.r/8,this.x-5,this.y-5,this.r);
+        g.addColorStop(0,'white');
+        g.addColorStop(1,'black');
+        ctx.fillStyle=g;
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fill();
+      },
+      update: function () {
+        if (!gameStartFlag) return;
+        // ball hit blocks
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            if (blocks[ r ][ c ].exist && (collisionOnTop(this, blocks[ r ][ c ])
+              || collisionOnLeft(this, blocks[ r ][ c ])
+              || collisionOnRight(this, blocks[ r ][ c ])
+            )) {
+              blocks[ r ][ c ].exist = false;
+              this.dy *= -1;
+              score+=1;
+              //
+              numOfBricks--;
+              if (numOfBricks==0) {
+                level++;
+                gameInit(level);
+              }
+              //
+              play(audioBounce);
+            }
+          }
+        }
+        // ball hit left or right of canvas
+        if (this.x - this.r <= 0 || this.x + this.r >= canvas.width) {
+          this.dx *= -1;
+          play(audioBounce);
+        }
+        // hit paddle
+        if (collisionOnTop(this, paddle)) {
+          /*
+          ball.x, paddle.x -> hitX
+          hitX -> angle
+          dx, dy -> energy
+          energy, angle -> new dx, new dy
+          */
+          let hitX = ball.x - paddle.x;
+          let angle = maxAngle - Math.floor((maxAngle - minAngle) / paddle.w * hitX);
+          let energy = (this.dx ** 2 + this.dy ** 2) ** 0.5;
+          this.dx = energy * Math.cos(angle * Math.PI / 180);
+          this.dy = -energy * Math.sin(angle * Math.PI / 180);
+          // console.log('dx,dy',this.dx,this.dy);
+
+          // play sound
+          play(audioBounce);
+        }
+        // ball hit top or bottom of canvas
+        if (this.y - this.r <= 0
+          // || this.y + this.r >= canvas.height
+        ) {
+          this.dy *= -1;
+          play(audioBounce);
+        }
+
+        if (this.y + this.r >= canvas.height) {
+          gameover();
+        }
+        this.x += this.dx;
+        this.y += this.dy;
+      }
+    }
+
+    // ball.update();
+    ball.draw();
+
+    let pause = false;
+    let score = 0;
+    // game loop
+    function loop() {
+      requestAnimationFrame(loop);
+      if (pause) return;
+      if (gameoverFlag) return;
+      // 1 clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 2 draw
+      drawText("Score: " + score, 60, 20, 'blue');
+      drawText("Level: " + level, 200, 20, 'blue');
+      blocks.forEach(function (row) {
+        row.forEach(function (block) {
+          block.draw();
+        });
+      });
+      paddle.draw();
+      ball.draw();
+
+      // 3 update
+      blocks.forEach(function (row) {
+        row.forEach(function (block) {
+          block.update();
+        });
+      });
+      paddle.update();
+      ball.update();
+    }
+
+    loop();
+
+  </script>
+
+</body>
+
+</html>

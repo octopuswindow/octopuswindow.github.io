@@ -47,7 +47,7 @@
         let left = null;
         let right = null;
 
-
+        let level = 1;
         window.addEventListener('keydown', function (e) {
             if (e.code === "ArrowLeft") {
                 left = true;
@@ -70,6 +70,9 @@
                     block.exist = false;
                     for (item in blocks) {
                         blocks[item].init();
+                    }
+                    if (level > 3) {
+                        level = 1;
                     }
                     go = true;
 
@@ -142,7 +145,7 @@
             g: null,
             init: function () {
                 console.log('j');
-                this.g = ctx.createLinearGradient(this.x, this.y, this.x+this.w, this.y+this.h);
+                this.g = ctx.createLinearGradient(this.x, this.y, this.x + this.w, this.y + this.h);
                 this.g.addColorStop(0, 'lightseagreen');
                 this.g.addColorStop(1, 'white');
                 console.log(this.g);
@@ -177,8 +180,10 @@
 
         // 3,10
         let blocks = [];
+        let bLen = 0;
         function createBlocks(rows, cols) {
             blocks = [];
+            bLen = 0;
             for (let r = 0; r < rows; r++) {
                 let newRow = [];
                 for (let c = 0; c < cols; c++) {
@@ -193,6 +198,7 @@
                     obj.y = r * (obj.h + 20) + 50;
                     //obj.w=;
                     //obj.h=;
+                    bLen++;
 
 
                     newRow.push(obj);
@@ -241,6 +247,7 @@
         };
         let go = true;
         function gameOver() {
+            level = 1;
             go = false;
             ctx.font = "30px Sans-Serif";
             ctx.textAlign = "center";
@@ -269,9 +276,9 @@
             draw: function () {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-                this.rg=ctx.createRadialGradient(this.x+5,this.y-5,0,this.x,this.y,this.r);
-                this.rg.addColorStop(0,'lightblue');
-                this.rg.addColorStop(1,"blue");
+                this.rg = ctx.createRadialGradient(this.x + 5, this.y - 5, 0, this.x, this.y, this.r);
+                this.rg.addColorStop(0, 'lightblue');
+                this.rg.addColorStop(1, "blue");
                 ctx.fillStyle = this.rg;
                 ctx.fill();
             },
@@ -352,7 +359,7 @@
         let score = 0;
 
         let rows = 3;
-        let columns = 10;
+        let columns = 5;
 
         createBlocks(rows, columns);
         block.exist = false;
@@ -378,7 +385,9 @@
             }
             paddle.draw();
             ball.draw();
-            drawText(score, 10, 20, "lightseagreen")
+            score = (bLen - blocks.length) * 10;
+            drawText(score, 20, 20, "lightseagreen")
+            drawText("level "+level, 80, 20, "lightseagreen")
 
             //update
 
@@ -388,7 +397,24 @@
                 if (blocks[item].exist == false) {
                     blocks.splice(item, 1);
                     playbounce();
-                    //console.log("fsd");
+                    console.log(blocks);
+                    if (blocks.length === 0) {
+                        if (level > 2) {
+                            go = false;
+                            ctx.font = "30px Sans-Serif";
+                            ctx.textAlign = "center";
+                            ctx.textBaseLine = "middle";
+                            ctx.fillText('you beat the game press "s" to restart', canvas.width / 2, canvas.height / 2);
+                            level++;
+                        } else {
+                            go = false;
+                            ctx.font = "30px Sans-Serif";
+                            ctx.textAlign = "center";
+                            ctx.textBaseLine = "middle";
+                            ctx.fillText('you won! press "s" to start next level', canvas.width / 2, canvas.height / 2);
+                            level++;
+                        }
+                    }
 
                 }
             }
