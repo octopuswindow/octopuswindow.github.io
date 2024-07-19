@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        ()=> {
+            return 100;
+        }
+
+        //
+        c=[1,2,3];
+        d=c.map(function(e) {
+            return e+100;
+        });
+        console.log(d);
+
+        c['mymap']=function(cb) {
+                let e=[];
+                for (let i=0; i<c.length; i++) {
+                    e.push(cb(c[i]));
+                }
+                return e;
+        }
+        let e=c.mymap((e)=> {
+            return e+200;
+        });
+        console.log(c);
+        console.log(e);
+    </script>
+</body>
+</html>
