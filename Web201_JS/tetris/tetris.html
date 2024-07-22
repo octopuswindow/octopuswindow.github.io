@@ -25,32 +25,7 @@
     <canvas id="canvas" width="300" height="600"></canvas>
     <label for="score" id="scorelabel">Score: </label>
     <span id="score">0</span>
-    <script>
-        let canvas = document.querySelector('#canvas');
-        let ctx = canvas.getContext('2d');
-
-        //
-        square = {
-            x: 0,
-            y: 0,
-            w: 30,
-            h: 30,
-            draw: function (row, col) {
-                ctx.beginPath();
-                ctx.rect(this.x + col * this.w, this.y + row * this.h, this.w, this.h);
-                ctx.strokeStyle = 'black';
-                ctx.stroke();
-            }
-
-        }
-        for (let x = 0; x <= 20; x++) {
-            for (let y = 0; y <= 10; y++) {
-                square.draw(x, y);
-            }
-        }
-        square.draw(1, 0);
-
-    </script>
+    <script type="module" src="./main.js"></script>
 
 </body>
 
