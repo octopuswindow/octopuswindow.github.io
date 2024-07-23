@@ -43,25 +43,34 @@ let square = {
 square.draw(1, 0);
 
 let board = {
-    x: 0,
-    y: 0,
+//    x: 0,
+//    y: 0,
     rows: 20,
     cols: 10,
     squares: (function () {
         let squares = []
         for (let r = 0; r <= 20; r++) {
+            let row=[]
             for (let c = 0; c <= 10; c++) {
                 let s = { ...square };
                 s.x = (c * s.w);
                 s.y = (r * s.h);
-                squares.push(s);
+                row.push(s);
             }
+            squares.push(row);
         }
+        console.log(squares);
         return squares;
     })(),
     draw: function () {
+        let index=0
         this.squares.forEach(s => {
-            s.draw();
+            let index=0
+            this.squares[index].forEach (sq => {
+                s[index].draw();
+                index++;
+            })
+            
         });
     }
 }
@@ -102,6 +111,19 @@ let Tetromino=function(aShape,row,col) {
     function update() {
       tr++;
     }
+    function inBoundary(tetrominoRow,tetrominoCol) {
+        for (let r=0; r<shape.size; r++) {
+            for (let c=0; c<shape.size; c++) {
+
+                let rr=tetrominoRow!=undefined?tetrominoRow:row+r;
+                let cc=tetrominoCol!=undefined?tetrominoCol:col+c;
+                if ((cc<0 || cc>9 || rr>19)&&currPattern[r][c]!=0) {
+                    console.log('out of boundary');
+                    return false;
+                }
+            }
+        }
+      }
 
     return {
       row:tr,
@@ -110,6 +132,7 @@ let Tetromino=function(aShape,row,col) {
       draw:draw,
       update:update,
       moveLeft: function() {
+        if (inBoundary(col-1))
         ctx.clearRect(0,0,canvas.width,canvas.height);
         board.draw();
         tc--;
@@ -140,13 +163,15 @@ let Tetromino=function(aShape,row,col) {
       rotateLeft: function() {
         currInd--;
         if (currInd<0) {
-            currInd=3;
+            currInd=3;``
         }
         currPattern=shape.patterns[currInd];
         ctx.clearRect(0,0,canvas.width,canvas.height);
         board.draw();
         draw();
-      }
+      },
+      inBoundary:inBoundary
+
     }
   }
 

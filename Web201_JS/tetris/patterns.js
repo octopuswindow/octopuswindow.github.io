@@ -181,4 +181,4 @@ const Z = {
 };
 
 let tetriminos = [I, O, T, L, J, S, Z];
-export {tetriminos}
+//xexport {tetriminos}
