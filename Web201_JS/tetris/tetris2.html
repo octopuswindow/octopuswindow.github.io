@@ -36,6 +36,7 @@
     var canvas = document.querySelector('canvas');
     var ctx = canvas.getContext('2d');
 
+    let score=0;
     // events
     let pause = false;
     window.addEventListener('keydown', function (e) {
@@ -91,7 +92,7 @@
       draw: function () {
         for (let r = 0; r < 20; r++) {
           for (let c = 0; c < 10; c++) {
-            this.squares[ r ][ c ].draw(r, c);
+            this.squares[r][c].draw(r, c);
           }
         }
       }
@@ -101,15 +102,15 @@
     // tetrominos
     Tetrominos = function () {
       //                0  1  2  3  4  5  6
-      let tetrominos = [ I, O, T, L, J, S, Z ];
-      let tZ = tetrominos[ 6 ];
+      let tetrominos = [I, O, T, L, J, S, Z];
+      let tZ = tetrominos[6];
       return {
         Z: tZ,
         tetrominos: tetrominos,
         getNext: function () {
           // [0,1)*7 -> [0,7) -> floor([0,7))
           let i = Math.floor(Math.random() * 7); // [0,6]
-          return tetrominos[ i ];
+          return tetrominos[i];
         }
       }
     }
@@ -118,7 +119,7 @@
     Tetromino = function (aShape, row, col) {
       let shape = aShape;
       let currInd = 0;
-      let currPattern = shape.patterns[ currInd ];
+      let currPattern = shape.patterns[currInd];
 
       function draw() {
         for (let r = 0; r < shape.size; r++) {
@@ -131,7 +132,7 @@
             b.draw(row, col);
 
             // convert tr,tc,r,c -> x,y
-            if (currPattern[ r ][ c ] != 0) {
+            if (currPattern[r][c] != 0) {
               let s = { ...square };
               s.color = shape.color;
               s.draw(row + r, col + c);
@@ -141,8 +142,8 @@
       }
 
       function moveDown() {
-        
-        if (inBoundary(row + 1) && !collision(row+1)) {
+
+        if (inBoundary(row + 1) && !collision(row + 1)) {
           row++;
           // draw
           ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -155,6 +156,7 @@
 
       function update() {
         moveDown();
+        //console.log(board.squares)
       }
 
       function rotate() {
@@ -162,7 +164,16 @@
         if (currInd == shape.patterns.length) {
           currInd = 0;
         }
-        currPattern = shape.patterns[ currInd ];
+        currPattern = shape.patterns[currInd];
+        if (collision(row, col)) {
+          currInd--;
+          console.log('yee')
+          if (currInd < 0) {
+            currInd = shape.patterns.length;
+
+          }
+          currPattern = shape.patterns[currInd];
+        }
         // draw
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         board.draw();
@@ -176,8 +187,8 @@
             // rr,cc: absolute row/col for square in board
             let rr = (tetrominoRow != undefined ? tetrominoRow : row) + r;
             let cc = (tetrominoCol != undefined ? tetrominoCol : col) + c;
-            if ((cc < 0 || cc > 9 || rr > 19) && currPattern[ r ][ c ] != 0) {
-              console.log('out of boundary');
+            if ((cc < 0 || cc > 9 || rr > 19) && currPattern[r][c] != 0) {
+              //console.log('out of boundary');
               return false;
             }
           }
@@ -192,8 +203,8 @@
             // rr,cc: absolute row/col for square in board
             let rr = (tetrominoRow != undefined ? tetrominoRow : row) + r;
             let cc = (tetrominoCol != undefined ? tetrominoCol : col) + c;
-            if (currPattern[ r ][ c ] != 0 && board.squares[rr][cc].color!=='white') {
-              console.log('collision');
+            if (currPattern[r][c] != 0 && board.squares[rr][cc].color !== 'white') {
+              //console.log('collision');
               return true;
             }
           }
@@ -207,12 +218,43 @@
             // convert r,c,row,col -> rr,cc
             let rr = row + r;
             let cc = col + c;
-            if (currPattern[ r ][ c ] != 0) {
-              board.squares[ rr ][ cc ].color = shape.color;
+            if (currPattern[r][c] != 0) {
+              board.squares[rr][cc].color = shape.color;
             }
           }
         }
         // get next random tetromino
+        let ea=0;
+        board.squares.forEach(elementA => {
+          let rowclear = 0;
+          elementA.forEach(elementB => {
+            //console.log(elementB);
+
+            if (elementB.color != 'white') {
+
+              rowclear++;
+              //console.log(elementB);
+
+            }
+            //console.log(rowclear)
+            if (rowclear == 10) {
+              console.log('no way');
+              elementA.forEach(elementC => {
+                elementC.color = 'white';
+              });
+              board.squares.splice(ea,1);
+              board.squares.unshift(elementA);
+              score++;
+              document.getElementById("score").innerHTML = score;
+              
+              
+
+            }
+          });
+          //console.log(elementA)
+          ea++;
+
+        });
         currTetromino = Tetromino(tetrominos.getNext(), 0, 4);
       }
 
@@ -228,7 +270,7 @@
         update: update,
         rotate: rotate,
         moveLeft: function () {
-          if (inBoundary(undefined, col - 1)  && !collision(row, col-1)) {
+          if (inBoundary(undefined, col - 1) && !collision(row, col - 1)) {
             col--;
             // draw
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -237,7 +279,7 @@
           }
         },
         moveRight: function () {
-          if (inBoundary(undefined, col + 1)  && !collision(row, col+1)) {
+          if (inBoundary(undefined, col + 1) && !collision(row, col + 1)) {
             col++;
             // draw
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -248,13 +290,13 @@
         moveDown: moveDown,
         inBoundary: inBoundary,
         stamp: stamp,
-        collision:collision
+        collision: collision
       }
     }
 
     // test
     tetrominos = Tetrominos();
-    currTetromino = Tetromino(tetrominos.Z,0,0);
+    currTetromino = Tetromino(tetrominos.Z, 0, 0);
     // currTetromino.draw();
 
     //
