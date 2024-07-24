@@ -180,5 +180,5 @@ const Z = {
 ]
 };
 
-let tetriminos = [I, O, T, L, J, S, Z];
+let tetrominos = [I, O, T, L, J, S, Z];
 //xexport {tetriminos}
