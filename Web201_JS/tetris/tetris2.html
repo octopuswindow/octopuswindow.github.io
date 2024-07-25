@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
+    body {
+      text-align: center;
+    }
+
     canvas {
       border: solid 10px deepskyblue;
     }
@@ -36,7 +40,6 @@
     var canvas = document.querySelector('canvas');
     var ctx = canvas.getContext('2d');
 
-    let score=0;
     // events
     let pause = false;
     window.addEventListener('keydown', function (e) {
@@ -50,6 +53,34 @@
         currTetromino.rotate();
       } else if (e.code === 'KeyP') {
         pause = !pause;
+      } else if (e.code==='KeyS') {
+        gameover=false;
+        // reset
+        score.innerText=0;
+        currTetromino=Tetromino(tetrominos.getNext(),-3,3);
+        board.reset();
+      } else if (e.code === 'Space') {
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();  
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+        currTetromino.moveDown();
+
       }
     });
 
@@ -89,10 +120,41 @@
         }
         return squares;
       })(),
+      reset: function() {
+        this.squares.forEach(function(row){
+          row.forEach(function(square){
+            square.color='white';
+          });
+        });
+      },
       draw: function () {
         for (let r = 0; r < 20; r++) {
           for (let c = 0; c < 10; c++) {
-            this.squares[r][c].draw(r, c);
+            this.squares[ r ][ c ].draw(r, c);
+          }
+        }
+      },
+      clearRows: function () {
+        for (let r = 0; r < 20; r++) {
+          // check if row is full
+          let isFull = true;
+          for (let c = 0; c < 10; c++) {
+            if (this.squares[ r ][ c ].color === 'white') {
+              isFull = false;
+              break;
+            }
+          }
+          // if yes
+          if (isFull) {
+            // remove
+            let removedRow = this.squares.splice(r, 1)[ 0 ];
+            for (let i = 0; i < 10; i++) {
+              removedRow[ i ].color = 'white';
+            }
+            // increment score
+            score.innerText= +score.innerText + 10;
+            // insert
+            this.squares.unshift(removedRow);
           }
         }
       }
@@ -102,15 +164,15 @@
     // tetrominos
     Tetrominos = function () {
       //                0  1  2  3  4  5  6
-      let tetrominos = [I, O, T, L, J, S, Z];
-      let tZ = tetrominos[6];
+      let tetrominos = [ I, O, T, L, J, S, Z ];
+      let tZ = tetrominos[ 6 ];
       return {
         Z: tZ,
         tetrominos: tetrominos,
         getNext: function () {
           // [0,1)*7 -> [0,7) -> floor([0,7))
           let i = Math.floor(Math.random() * 7); // [0,6]
-          return tetrominos[i];
+          return tetrominos[ i ];
         }
       }
     }
@@ -119,7 +181,7 @@
     Tetromino = function (aShape, row, col) {
       let shape = aShape;
       let currInd = 0;
-      let currPattern = shape.patterns[currInd];
+      let currPattern = shape.patterns[ currInd ];
 
       function draw() {
         for (let r = 0; r < shape.size; r++) {
@@ -132,7 +194,7 @@
             b.draw(row, col);
 
             // convert tr,tc,r,c -> x,y
-            if (currPattern[r][c] != 0) {
+            if (currPattern[ r ][ c ] != 0) {
               let s = { ...square };
               s.color = shape.color;
               s.draw(row + r, col + c);
@@ -142,7 +204,6 @@
       }
 
       function moveDown() {
-
         if (inBoundary(row + 1) && !collision(row + 1)) {
           row++;
           // draw
@@ -156,24 +217,25 @@
 
       function update() {
         moveDown();
-        //console.log(board.squares)
       }
 
       function rotate() {
+        let currIndBak = currInd;
+        let currPatternBak = currPattern;
+        // 
         currInd++;
         if (currInd == shape.patterns.length) {
           currInd = 0;
         }
-        currPattern = shape.patterns[currInd];
-        if (collision(row, col)) {
-          currInd--;
-          console.log('yee')
-          if (currInd < 0) {
-            currInd = shape.patterns.length;
+        currPattern = shape.patterns[ currInd ];
+        // check if pattern valid
+        if (inBoundary() && !collision()) {
 
-          }
-          currPattern = shape.patterns[currInd];
+        } else {
+          currInd = currIndBak;
+          currPattern = currPatternBak;
         }
+
         // draw
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         board.draw();
@@ -187,8 +249,8 @@
             // rr,cc: absolute row/col for square in board
             let rr = (tetrominoRow != undefined ? tetrominoRow : row) + r;
             let cc = (tetrominoCol != undefined ? tetrominoCol : col) + c;
-            if ((cc < 0 || cc > 9 || rr > 19) && currPattern[r][c] != 0) {
-              //console.log('out of boundary');
+            if ((cc < 0 || cc > 9 || rr > 19) && currPattern[ r ][ c ] != 0) {
+              console.log('out of boundary');
               return false;
             }
           }
@@ -203,8 +265,10 @@
             // rr,cc: absolute row/col for square in board
             let rr = (tetrominoRow != undefined ? tetrominoRow : row) + r;
             let cc = (tetrominoCol != undefined ? tetrominoCol : col) + c;
-            if (currPattern[r][c] != 0 && board.squares[rr][cc].color !== 'white') {
-              //console.log('collision');
+            // square has color and in board
+            // also square in board has color
+            if (currPattern[ r ][ c ] != 0 && rr >= 0 && board.squares[ rr ][ cc ].color !== 'white') {
+              console.log('collision');
               return true;
             }
           }
@@ -213,49 +277,28 @@
       }
 
       function stamp() {
+        // stamp
         for (let r = 0; r < shape.size; r++) {
           for (let c = 0; c < shape.size; c++) {
             // convert r,c,row,col -> rr,cc
             let rr = row + r;
             let cc = col + c;
-            if (currPattern[r][c] != 0) {
-              board.squares[rr][cc].color = shape.color;
+            // check if some squares with color in tetromino out of top boundary
+            // if yes, game over
+            if (currPattern[ r ][ c ] !== 0 && rr < 0) {
+              console.log('gameover');
+              gameover = true;
+            }
+
+            if (currPattern[ r ][ c ] != 0 && rr >= 0) {
+              board.squares[ rr ][ cc ].color = shape.color;
             }
           }
         }
         // get next random tetromino
-        let ea=0;
-        board.squares.forEach(elementA => {
-          let rowclear = 0;
-          elementA.forEach(elementB => {
-            //console.log(elementB);
-
-            if (elementB.color != 'white') {
-
-              rowclear++;
-              //console.log(elementB);
-
-            }
-            //console.log(rowclear)
-            if (rowclear == 10) {
-              console.log('no way');
-              elementA.forEach(elementC => {
-                elementC.color = 'white';
-              });
-              board.squares.splice(ea,1);
-              board.squares.unshift(elementA);
-              score++;
-              document.getElementById("score").innerHTML = score;
-              
-              
-
-            }
-          });
-          //console.log(elementA)
-          ea++;
-
-        });
-        currTetromino = Tetromino(tetrominos.getNext(), 0, 4);
+        currTetromino = Tetromino(tetrominos.getNext(), -3, 4);
+        // check if there are rows with all colors, if yes, remove the rows 
+        board.clearRows();
       }
 
       return {
@@ -270,7 +313,7 @@
         update: update,
         rotate: rotate,
         moveLeft: function () {
-          if (inBoundary(undefined, col - 1) && !collision(row, col - 1)) {
+          if (inBoundary(undefined, col - 1) && !collision(undefined, col - 1)) {
             col--;
             // draw
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -279,7 +322,7 @@
           }
         },
         moveRight: function () {
-          if (inBoundary(undefined, col + 1) && !collision(row, col + 1)) {
+          if (inBoundary(undefined, col + 1) && !collision(undefined, col + 1)) {
             col++;
             // draw
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -294,7 +337,17 @@
       }
     }
 
+    function drawText(text, x, y, size, color) {
+      ctx.beginPath();
+      ctx.font = size + "px monospace";
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, x, y);
+    }
+
     // test
+    gameover = false;
     tetrominos = Tetrominos();
     currTetromino = Tetromino(tetrominos.Z, 0, 0);
     // currTetromino.draw();
@@ -305,6 +358,14 @@
       requestAnimationFrame(loop);
       if (pause) return;
 
+      // 
+      if (gameover) {
+        drawText("Game Over!", canvas.width / 2,
+          canvas.height / 2, 20, 'red');
+        drawText("Press 'S' to start.", canvas.width / 2,
+          canvas.height / 2+20, 20, 'red');
+        return;
+      }
       // set interval to 1 sec
       let curr = Date.now();
       if (curr - pre < 1000) return;
