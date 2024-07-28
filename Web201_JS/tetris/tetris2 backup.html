@@ -57,7 +57,7 @@
         gameover = false;
         // reset
         score.innerText = 0;
-        currTetromino = new Tetromino(tetrominos.getNext(), -3, 3);
+        currTetromino = Tetromino(tetrominos.getNext(), -3, 3);
         board.reset();
       } else if (e.code === 'Space') {
         currTetromino.moveDown();
@@ -66,7 +66,7 @@
     });
 
     // square
-    let square = {
+    square = {
       size: 30,
       color: 'white',
       strokeColor: 'black',
@@ -86,7 +86,7 @@
     square.draw(1, 0);
 
     // board
-    let board = {
+    board = {
       rows: 20,
       cols: 10,
       squares: (function () {
@@ -330,7 +330,7 @@
           }
         }
         // get next random tetromino
-        currTetromino = new Tetromino(tetrominos.getNext(), -3, 4);
+        currTetromino = Tetromino(tetrominos.getNext(), -3, 4);
         // check if there are rows with all colors, if yes, remove the rows 
         board.clearRows();
       }
@@ -383,7 +383,7 @@
     // test
     gameover = false;
     tetrominos = Tetrominos();
-    currTetromino = new Tetromino(tetrominos.getNext(), -3, 4);
+    currTetromino = Tetromino(tetrominos.getNext(), -3, 4);
     // currTetromino.draw();
 
     //
