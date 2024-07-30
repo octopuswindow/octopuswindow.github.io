@@ -1,10 +1,25 @@
 var bgCanvas = document.querySelector('#background')
 var c = bgCanvas.getContext('2d');
-let bg = new Image();
-bg.src = "breakout_bg.avif";
-bg.addEventListener('load', function () {
-    c.drawImage(bg, 0, 0, bgCanvas.width, bgCanvas.height);
-})
+
+fileLoader.addEventListener('change', function(e) {
+    let fileReader = new FileReader();
+    fileReader.readAsDataURL(fileLoader.files[0]);
+    fileReader.addEventListener('load',function(e) {
+    
+        let bg = new Image();
+        bg.src = fileReader.result;
+
+        bg.addEventListener('load', function () {
+            c.drawImage(bg, 0, 0, bgCanvas.width, bgCanvas.height);
+            
+        });
+    });
+    
+});
+
+
+
+
 
 let canvas = document.querySelector('#canvas');
 let ctx = canvas.getContext('2d');
