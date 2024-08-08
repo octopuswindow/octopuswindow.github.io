@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+        #canvas {
+            border: solid lightseagreen 4px;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+    let canvas=document.querySelector('#canvas');
+    let ctx = canvas.getContext('2d');
+
+
+    function Animation(f, yS, X, Y) {
+        this.frames=f;
+        this.yStart=yS;
+        this.currFrame=0;
+        this.img=new Image();
+        this.img.src="spritesheet_46rows_832x2944.png";
+        this.x=X;
+        this.y=Y;
+
+        //ctx.drawImage(this.img,0,0,600,600,200,200,600,600);
+        this.draw = function() {
+            //ctx.drawImage(this.img,(this.currFrame*64)+this.x,(this.yStart*64)+this.y,832,2944,0,0,832,2944);
+            //,this.x,this.y,this.x+64,this.y+64
+            //,832,2944Z
+            ctx.drawImage(this.img,(this.currFrame*64)+this.x,(this.yStart*64)+this.y,64,64,0,0,this.x+64,this.y+64);
+        }
+
+
+    }
+    
+    let animations = []
+    animations.push(new Animation(7, 3,0 ,0));
+    setInterval(function(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        animations.forEach(el => {
+            el.currFrame ++;
+            if (el.currFrame>=el.frames) {
+                el.currFrame=0;
+            }
+            console.log(el.currFrame);
+            el.draw();
+        });
+
+    },100);
+    </script>
+
+</body>
+</html>

@@ -33,7 +33,7 @@
     <label for="score">Score: </label>
     <span id="score">0</span>
   </div>
-  <canvas id='canvas' width=300 height=600></canvas>
+  <canvas id='canvas' width=450 height=600></canvas>
 
   <script src="patterns.js"></script>
   <script>
@@ -384,6 +384,8 @@
     gameover = false;
     tetrominos = Tetrominos();
     currTetromino = new Tetromino(tetrominos.getNext(), -3, 4);
+    let display = [];
+    display.push(new Tetromino(tetrominos.getNext(),5,5));
     // currTetromino.draw();
 
     //
@@ -412,8 +414,13 @@
       board.draw();
       currTetromino.draw();
 
+
       // 3 update
       currTetromino.update();
+
+      display.forEach(elt => {
+        elt.draw();
+      });
     }
     loop();
   </script>
