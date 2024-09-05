@@ -44,14 +44,22 @@
     let pause = false;
     window.addEventListener('keydown', function (e) {
       if (e.code === 'ArrowLeft') {
-        currTetromino.moveLeft();
+        if (gameover === false) {
+          currTetromino.moveLeft();
+        }
       } else if (e.code === 'ArrowRight') {
-        currTetromino.moveRight();
+        if (gameover === false) {
+          currTetromino.moveRight();
+        }
       } else if (e.code === 'ArrowDown') {
-        currTetromino.moveDown();
-        Sdisplay();
+        if (gameover === false) {
+          currTetromino.moveDown();
+          Sdisplay();
+        }
       } else if (e.code === 'ArrowUp') {
-        currTetromino.rotate();
+        if (gameover === false) {
+          currTetromino.rotate();
+        }
       } else if (e.code === 'KeyP') {
         pause = !pause;
       } else if (e.code === 'KeyS') {
