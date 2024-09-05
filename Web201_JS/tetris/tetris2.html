@@ -33,7 +33,7 @@
     <label for="score">Score: </label>
     <span id="score">0</span>
   </div>
-  <canvas id='canvas' width=450 height=600></canvas>
+  <canvas id='canvas' width=480 height=600></canvas>
 
   <script src="patterns.js"></script>
   <script>
@@ -49,6 +49,7 @@
         currTetromino.moveRight();
       } else if (e.code === 'ArrowDown') {
         currTetromino.moveDown();
+        Sdisplay();
       } else if (e.code === 'ArrowUp') {
         currTetromino.rotate();
       } else if (e.code === 'KeyP') {
@@ -64,6 +65,32 @@
 
       }
     });
+
+    let display = [];
+    let nextTetromino = [];
+    let jj=[I, O, T, L, J, S, Z]
+    let Sbip = new Audio("bip.mp3");
+    let Sbipbap = new Audio("bipbap.mp3");
+    let Srowclear = new Audio("rowclear.mp3");
+    let Slosr = new Audio("losr.mp3");
+    function playSound(sond) {
+      if (sond === "bip") {
+        let so = Sbip.cloneNode();
+        so.play();
+      }
+      if (sond === "bipbap") {
+        let so = Sbipbap.cloneNode();
+        so.play();
+      }
+      if (sond === "rowclear") {
+        let so = Srowclear.cloneNode();
+        so.play();
+      }
+      if (sond === "losr") {
+        let so = Slosr.cloneNode();
+        so.play();
+      }
+    }
 
     // square
     let square = {
@@ -109,11 +136,15 @@
         });
       },
       draw: function () {
+        
         for (let r = 0; r < 20; r++) {
           for (let c = 0; c < 10; c++) {
             this.squares[r][c].draw(r, c);
           }
         }
+
+        
+
       },
       clearRows: function () {
         for (let r = 0; r < 20; r++) {
@@ -134,6 +165,7 @@
             }
             // increment score
             score.innerText = +score.innerText + 10;
+            playSound("rowclear");
             // insert
             this.squares.unshift(removedRow);
           }
@@ -195,6 +227,9 @@
         } else {
           stamp();
         }
+
+        playSound("bip");
+
       }
 
       function update() {
@@ -238,6 +273,10 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         board.draw();
         draw();
+
+        Sdisplay();
+        playSound("bip");
+
       }
 
       function inBoundary(tetrominoRow, tetrominoCol) {
@@ -311,6 +350,7 @@
       }
 
       function stamp() {
+        playSound("bipbap");
         // stamp
         for (let r = 0; r < shape.size; r++) {
           for (let c = 0; c < shape.size; c++) {
@@ -320,6 +360,7 @@
             // check if some squares with color in tetromino out of top boundary
             // if yes, game over
             if (currPattern[r][c] !== 0 && rr < 0) {
+              playSound("losr");
               console.log('gameover');
               gameover = true;
             }
@@ -330,7 +371,11 @@
           }
         }
         // get next random tetromino
-        currTetromino = new Tetromino(tetrominos.getNext(), -3, 4);
+        // get next random tetromino
+        nextTetromino.push(jj[Math.floor(Math.random() * 7)]);
+        currTetromino = new Tetromino(nextTetromino.shift(), -3, 4);
+        Sdisplay();
+        //this one is the one that spawns them while the game is runninh
         // check if there are rows with all colors, if yes, remove the rows 
         board.clearRows();
       }
@@ -354,6 +399,10 @@
             board.draw();
             draw();
           }
+
+          Sdisplay();
+          playSound("bip");
+
         },
         moveRight: function () {
           if (inBoundary(undefined, col + 1) && !collision(undefined, col + 1)) {
@@ -363,6 +412,10 @@
             board.draw();
             draw();
           }
+
+          Sdisplay();
+          playSound("bip");
+
         },
         moveDown: moveDown,
         inBoundary: inBoundary,
@@ -381,12 +434,27 @@
     }
 
     // test
+    //nextTetromino=[tetrominos[Math.floor(Math.random() * 7)]];
+    
+    nextTetromino=[jj[Math.floor(Math.random() * 7)],jj[Math.floor(Math.random() * 7)],jj[Math.floor(Math.random() * 7)],jj[Math.floor(Math.random() * 7)],jj[Math.floor(Math.random() * 7)]];
     gameover = false;
     tetrominos = Tetrominos();
+    
     currTetromino = new Tetromino(tetrominos.getNext(), -3, 4);
-    let display = [];
-    display.push(new Tetromino(tetrominos.getNext(),5,5));
+
+    
     // currTetromino.draw();
+    function Sdisplay() {
+      display.push(new Tetromino(nextTetromino[0],1,11));
+      display.push(new Tetromino(nextTetromino[1],5,11));
+      display.push(new Tetromino(nextTetromino[2],10,11));
+      display.push(new Tetromino(nextTetromino[3],15,11));
+
+      display.forEach(elt => {
+        elt.draw();
+      });
+      display=[];
+    };
 
     //
     let pre = null;
@@ -396,6 +464,7 @@
 
       // 
       if (gameover) {
+        
         drawText("Game Over!", canvas.width / 2,
           canvas.height / 2, 20, 'red');
         drawText("Press 'S' to start.", canvas.width / 2,
@@ -418,9 +487,8 @@
       // 3 update
       currTetromino.update();
 
-      display.forEach(elt => {
-        elt.draw();
-      });
+      Sdisplay();
+
     }
     loop();
   </script>
