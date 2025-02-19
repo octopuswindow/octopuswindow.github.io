@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <style>
+            html {
+                height: auto;
+                overflow: hidden;
+            }
+
+            body {
+                margin: 0;
+
+                padding: 0;
+                height: auto;
+                background-attachment: fixed;
+                overflow: hidden;
+            }
+            #canvas {
+                padding: 0;
+                height: 96vh;
+                width: 96vw;
+                border: solid lightseagreen 4px;
+                overflow: hidden;
+                display: inline-block;
+            }
+
+            #selector1 {
+                position: fixed;
+                left: 10px;
+                top: 1s0px;
+                z-index: 999;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas">
+            <select id="selector1">
+                <optgroup label="SE5">
+                    <option value="SE5-day">SE5-day</option>
+                    <option value="SE5-day">SE5-night</option>
+                </optgroup>
+            </select>
+        </canvas>
+
+        <script>
+            let canvas = document.querySelector("#canvas");
+            let ctx = canvas.getContext("2d");
+            let scale = 0.1;
+            let mapimage = new Image();
+            let w;
+            let h;
+
+            mapimage.onload = function () {
+                console.log(this.width + "x" + this.height);
+                w = this.width;
+                h = this.height;
+
+                canvas.width = Number(getComputedStyle(canvas).getPropertyValue("width").replace("px", ""));
+                canvas.height = Number(getComputedStyle(canvas).getPropertyValue("height").replace("px", ""));
+                if (canvas.width > canvas.height) {
+                    w *= canvas.height / this.height;
+                    h *= canvas.height / this.height;
+                } else {
+                    w *= canvas.width / this.width;
+                    h *= canvas.width / this.width;
+                }
+
+                Draw();
+            };
+            mapimage.src = "2025-02-17_18.51.39_x-2560_z-3072.png";
+            let x = 0;
+            let y = 0;
+            let mx;
+            let my;
+            console.dir(canvas);
+            window.addEventListener("resize", function () {
+                console.log("dffdsfds");
+                canvas.width = Number(getComputedStyle(canvas).getPropertyValue("width").replace("px", ""));
+                canvas.height = Number(getComputedStyle(canvas).getPropertyValue("height").replace("px", ""));
+                //console.log(getComputedStyle(canvas).getPropertyValue("width").replace("px", ""));
+                console.log(w);
+
+                Draw();
+            });
+
+            window.addEventListener("wheel", function (e) {
+                let amount = e.wheelDelta > 0 ? 1.1 : 1 / 1.1;
+                mx = e.clientX;
+                my = e.clientY;
+
+                //console.log(e.deltaY);
+
+                let dsx = amount;
+                let dsy = amount;
+                //let ds = (scale - e.deltaY / 5000) / scale;
+                let ow = w;
+                let oh = h;
+                let ox = x;
+                let oy = y;
+                let c1 = mx - x;
+                let c2 = my - y;
+
+                // resize image
+                w *= amount;
+                h *= amount;
+
+                x -= (w - ow) * (c1 / ow);
+                y -= (h - oh) * (c2 / oh);
+
+                console.log("amount: " + e.deltaY);
+                console.log("old width and height: " + ow + ", " + oh);
+                console.log("old x and y: " + ox + ", " + oy);
+                console.log("difference in x: " + String(dsx * w - dsx * ow));
+                console.log("difference in y: " + String(dsy * y - dsy * oh));
+                console.log("new width and height: " + w + ", " + h);
+                console.log("new x and y: " + x + ", " + y);
+
+                // canvas pos -> image pos
+                c1 = mx - x;
+                c2 = my - y;
+                //scale = scale - e.deltaY / 5000;
+
+                //console.log(scale);
+
+                // old img pos -> resized img pos
+                //rx = c1 * dsx;
+                //ry = c2 * dsy;
+                //console.log(rx, ry);
+
+                // center the point
+                //x = (canvas.width / 2 - rx)-(c1*dsx);
+                //y = (canvas.height / 2 - ry)-(c2*dsy);
+
+                //x -= ds * c1;
+                //y -= ds * c1;
+
+                //console.log(c1, c2);
+                //console.log(c1, c2);
+
+                Draw();
+            });
+
+            let hold = false;
+
+            window.addEventListener("mousedown", function (e) {
+                mx = e.clientX;
+                my = e.clientY;
+                hold = true;
+                console.log("down");
+            });
+
+            window.addEventListener("mouseup", function (e) {
+                mx = e.clientX;
+                my = e.clientY;
+                hold = false;
+                console.log("up");
+            });
+
+            window.addEventListener("mousemove", function (e) {
+                if (hold) {
+                    console.log(mx - e.clientX);
+                    x -= mx - e.clientX;
+                    y -= my - e.clientY;
+                    mx = e.clientX;
+                    my = e.clientY;
+
+                    Draw();
+                }
+            });
+
+            function Draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(mapimage, x, y, w, h);
+            }
+
+            console.log(getComputedStyle(canvas).getPropertyValue("width"));
+        </script>
+    </body>
+</html>
