@@ -36,13 +36,34 @@
     </head>
     <body>
         <canvas id="canvas">
-            <select id="selector1">
-                <optgroup label="SE5">
-                    <option value="SE5-day">SE5-day</option>
-                    <option value="SE5-day">SE5-night</option>
-                </optgroup>
-            </select>
+
         </canvas>
+        <select id="selector1" onchange="Change();">
+            <optgroup label="SE5">
+                <option value="SE5-o-d">SE5 [swim]</option>
+            </optgroup>
+            
+            <optgroup label="SE4">
+                <option value="SE4-o-d">SE4 [gge]</option>
+            </optgroup>
+            
+            <optgroup label="SE3">
+                <option value="SE3-o-d">SE3 [cucumber]</option>
+            </optgroup>
+            
+            <optgroup label="SE2">
+                <option value="SE2-o-d">SE2 [gge]</option>
+            </optgroup>
+            
+            <optgroup label="SE1">
+                <option value="SE1-o-d">SE1 [shark]</option>
+            </optgroup>
+            
+            <optgroup label="click map to copy">
+            </optgroup>
+            <optgroup label="approximate coords">
+            </optgroup>
+        </select>
 
         <script>
             let canvas = document.querySelector("#canvas");
@@ -51,6 +72,8 @@
             let mapimage = new Image();
             let w;
             let h;
+            let offx = 2583;
+            let offy = 3061;
 
             mapimage.onload = function () {
                 console.log(this.width + "x" + this.height);
@@ -74,13 +97,14 @@
             let y = 0;
             let mx;
             let my;
+            let notmove = false;
             console.dir(canvas);
             window.addEventListener("resize", function () {
                 console.log("dffdsfds");
                 canvas.width = Number(getComputedStyle(canvas).getPropertyValue("width").replace("px", ""));
                 canvas.height = Number(getComputedStyle(canvas).getPropertyValue("height").replace("px", ""));
                 //console.log(getComputedStyle(canvas).getPropertyValue("width").replace("px", ""));
-                console.log(w);
+                //console.log(w);
 
                 Draw();
             });
@@ -108,7 +132,8 @@
 
                 x -= (w - ow) * (c1 / ow);
                 y -= (h - oh) * (c2 / oh);
-
+                
+                /*
                 console.log("amount: " + e.deltaY);
                 console.log("old width and height: " + ow + ", " + oh);
                 console.log("old x and y: " + ox + ", " + oy);
@@ -116,7 +141,7 @@
                 console.log("difference in y: " + String(dsy * y - dsy * oh));
                 console.log("new width and height: " + w + ", " + h);
                 console.log("new x and y: " + x + ", " + y);
-
+                */
                 // canvas pos -> image pos
                 c1 = mx - x;
                 c2 = my - y;
@@ -147,28 +172,74 @@
             window.addEventListener("mousedown", function (e) {
                 mx = e.clientX;
                 my = e.clientY;
+                //console.log(Math.round(((mapimage.width/w)*(mx-x))-offx));
+                //console.log(Math.round(((mapimage.height/h)*(my-y))-offy));
+                //console.log(mx,my);
                 hold = true;
-                console.log("down");
+                notmove = true;
+                //console.log("down");
             });
 
             window.addEventListener("mouseup", function (e) {
                 mx = e.clientX;
                 my = e.clientY;
                 hold = false;
-                console.log("up");
+                if (notmove && my > 23) {
+                    let pox=Math.round(((mapimage.width/w)*(mx-x))-offx);
+                    let poy=Math.round(((mapimage.height/h)*(my-y))-offy);
+                    //console.log(toString(pox));
+                    //console.log(my);
+                    navigator.clipboard.writeText("x: "+pox.toString()+" y: "+poy.toString());
+                    alert("copied coordinates to clipboard");
+                }
+                //console.log("up");
             });
 
             window.addEventListener("mousemove", function (e) {
                 if (hold) {
-                    console.log(mx - e.clientX);
+                    //console.log(mx - e.clientX);
                     x -= mx - e.clientX;
                     y -= my - e.clientY;
                     mx = e.clientX;
                     my = e.clientY;
-
+                    notmove = false;
                     Draw();
                 }
             });
+            
+            function Change() {
+                let jjjjj = document.querySelector('#selector1').value;
+                console.log(jjjjj);
+                x=0;
+                y=0;
+                if (jjjjj === "SE5-o-d") {
+                    mapimage.src = "2025-02-17_18.51.39_x-2560_z-3072.png";
+                    offx = 2583;
+                    offy = 3061;
+                    console.log()
+                } else if (jjjjj === "SE4-o-d") {
+                    mapimage.src = "se4map.png";
+                    offx = 3024;
+                    offy = 2643;
+                    
+                } else if (jjjjj === "SE3-o-d") {
+                    mapimage.src = "se3map.png";
+                    offx = 2000;
+                    offy = 2000;
+                    
+                } else if (jjjjj === "SE2-o-d") {
+                    mapimage.src = "se2map.png";
+                    offx = 3000;
+                    offy = 3000;
+                    
+                } else if (jjjjj === "SE1-o-d") {
+                    mapimage.src = "se1map.png";
+                    offx = 3585;
+                    offy = 2105;
+                    
+                }
+                Draw();
+            }
 
             function Draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
