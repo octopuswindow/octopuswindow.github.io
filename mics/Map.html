@@ -39,6 +39,7 @@
 
         </canvas>
         <select id="selector1" onchange="Change();">
+            
             <optgroup label="SE5">
                 <option value="SE5-o-d">SE5 [swim]</option>
             </optgroup>
@@ -57,6 +58,9 @@
             
             <optgroup label="SE1">
                 <option value="SE1-o-d">SE1 [shark]</option>
+            </optgroup>
+            <optgroup label="FSMP1">
+                <option value="FSMP1-o-d">FSMP1 [swim]</option>
             </optgroup>
             
             <optgroup label="click map to copy">
@@ -236,6 +240,11 @@
                     mapimage.src = "se1map.png";
                     offx = 3585;
                     offy = 2105;
+                    
+                } else if (jjjjj === "FSMP1-o-d") {
+                    mapimage.src = "fsmpmap1.png";
+                    offx = 6102;
+                    offy = 3025;
                     
                 }
                 Draw();

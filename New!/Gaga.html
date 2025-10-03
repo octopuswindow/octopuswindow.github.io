@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <style>
+            #one {
+                outline: solid 5px;
+                display: inline-block;
+                position: absolute;
+            }
+
+            #two {
+                display: inline-block;
+                position: absolute;
+                z-index: 999;
+                opacity: 0;
+            }
+
+            #three {
+                display: inline-block;
+                position: absolute;
+                top: 40px;
+                z-index: 999;
+                opacity: 0;
+            }
+            #four {
+                display: inline-block;
+                position: absolute;
+                top: 80px;
+                z-index: 999;
+                opacity: 0;
+            }
+
+            #five {
+                display: inline-block;
+                position: absolute;
+                top: 120px;
+                z-index: 999;
+                opacity: 0;
+            }
+            #six {
+                display: inline-block;
+                position: absolute;
+                top: 160px;
+                z-index: 999;
+                opacity: 0;
+            }
+            #seven {
+                display: inline-block;
+                position: absolute;
+                top: 200px;
+                z-index: 999;
+                opacity: 0;
+            }
+            #eight {
+                display: inline-block;
+                position: absolute;
+                top: 240px;
+                z-index: 999;
+                opacity: 0;
+            }
+            .toggle1 {
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+            .label1 {
+                position: absolute;
+                display: inline-block;
+                opacity: 0;
+            }
+            #nine {
+                display: inline-block;
+                position: absolute;
+                top: 280px;
+                z-index: 999;
+                opacity: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <input id="two" class="toggle1" type="color" />
+        <input id="three" class="toggle1" type="number" placeholder="sprite X" />
+        <input id="four" class="toggle1" type="number" placeholder="sprite Y" />
+        <input id="five" class="toggle1" type="number" placeholder="sprite width" />
+        <input id="six" class="toggle1" type="number" placeholder="sprite height" />
+        
+        <label for="seven" class="label1 toggle1" style="top: 200px; left: 30px">use spritesheet</label>
+        <input id="seven" class="toggle1" type="checkbox" />
+        
+        <label for="eight" class="label1 toggle1" style="top: 240px; left: 30px">snap to grid</label>
+        <input id="eight" class="toggle1" type="checkbox" />
+        
+        <label for="eight" class="label1 toggle1" style="top: 280px; left: 30px">disable collisions</label>
+        <input id="nine" class="toggle1" type="checkbox" />
+        
+        
+        <canvas id="one" width="480" height="360"></canvas>
+
+        <script>
+            let canvas = document.querySelector("#one");
+            let ctx = canvas.getContext("2d");
+            let frame = 0;
+            let scrollX = 0;
+            let scrollY = 0;
+            const maxFPS = 60;
+            const frameIntervalMs = 1000 / maxFPS;
+            let previousTimeMs = 0;
+            let scale = 1;
+            let playerX = 0;
+            let playerY = 0;
+            let playerW = 32;
+            let playerH = 32;
+            let velX = 0;
+            let velY = 0;
+            let ground = [
+                [0, 250, 480, 20, "red"],
+                [200, 200, 50, 50, "red"],
+                [300, 120, 50, 50, "red"]
+            ];
+            let canjump = true;
+            let wDown = false;
+            let aDown = false;
+            let dDown = false;
+            let pSpeed = 3;
+            let scrollOffY = 0;
+            let scrollOffX = 0;
+            let editor = false;
+            let tempP1 = { x: 0, y: 0 };
+            let tempP2;
+            let mouseX = 0;
+            let mouseY = 0;
+            let fDown = false;
+            let gDown = false;
+            let sel = [];
+            let huamao = new Image();
+            huamao.src = "spritesheet1.png";
+            ctx.imageSmoothingEnabled = false;
+            let displayPreview = false;
+            let snap = 32;
+            let aMouseX = 0;
+            let aMouseY =0 ;
+            
+
+            //huamao.addEventListener('load', function () {
+            //    loop();
+            //    console.log('loop');
+            //});
+
+            window.addEventListener("keydown", (e) => {
+                //console.log(e);
+
+                if (e.code === "ArrowUp") {
+                    wDown = true;
+                }
+                if (e.code === "ArrowDown") {
+                }
+                if (e.code === "ArrowLeft") {
+                    aDown = true;
+                }
+                if (e.code === "ArrowRight") {
+                    dDown = true;
+                }
+
+                if (e.code === "KeyW") {
+                    scrollOffY += -10;
+                }
+                if (e.code === "KeyS") {
+                    scrollOffY += 10;
+                }
+                if (e.code === "KeyA") {
+                    scrollOffX += -10;
+                }
+                if (e.code === "KeyD") {
+                    scrollOffX += 10;
+                }
+                if (e.code === "KeyP") {
+                    console.log(ground);
+                }
+                if (e.key === "Backspace" || e.key === "Delete") {
+                    //console.log(e);
+                    //delete blocks
+                    if (editor) {
+                        for (let i = 0; i < ground.length; i++) {
+                            if (
+                                mouseX + scrollX > ground[i][0] &&
+                                mouseY + scrollY > ground[i][1] &&
+                                mouseX + scrollX < ground[i][2] + ground[i][0] &&
+                                mouseY + scrollY < ground[i][3] + ground[i][1]
+                            ) {
+                                console.log("d");
+                                ground.splice(i, 1);
+                                i--;
+                            }
+                        }
+                    }
+                }
+                if (e.code === "KeyF") {
+                    fDown = true;
+                }
+                if (e.code === "KeyG") {
+                    gDown = true;
+                }
+                if (e.code === "KeyR") {
+                    sel = [];
+                }
+                //console.log(wDown+ " " +aDown + " " + dDown);
+            });
+
+            window.addEventListener("keyup", (e) => {
+                //console.log(e);
+
+                if (e.code === "ArrowUp") {
+                    wDown = false;
+                }
+                if (e.code === "ArrowLeft") {
+                    aDown = false;
+                }
+                if (e.code === "ArrowRight") {
+                    dDown = false;
+                }
+                if (e.code === "KeyE") {
+                    editor = !editor;
+                    //console.log("editor " + editor);
+                    if (editor) {
+                        for (let i = 0; i<document.getElementsByClassName('toggle1').length; i++) {
+                            document.getElementsByClassName('toggle1')[i].style.opacity = 1;
+                        }
+                    } else {
+                        for (let i = 0; i<document.getElementsByClassName('toggle1').length; i++) {
+                            document.getElementsByClassName('toggle1')[i].style.opacity = 0;
+                        }
+                    }
+                }
+                if (e.code === "KeyF") {
+                    fDown = false;
+                }
+                if (e.code === "KeyG") {
+                    gDown === false;
+                }
+
+                //console.log(wDown+ " " +aDown + " " + dDown);
+            });
+
+            window.addEventListener("mousedown", (e) => {
+                console.log(mouseX + " " + mouseY + " " + e.offsetX + " " + e.offsetY);
+                if (true) {
+                    tempP1.x = mouseX;
+                    tempP1.y = mouseY;
+                }
+                if (editor) {
+                    displayPreview = true;
+                    
+                    //hide gui when selection box shows up
+                    function waitUntilMove() {
+                        if (!(aMouseX === e.offsetX && aMouseY === e.offsetY)) {
+                            for (let i = 0; i<document.getElementsByClassName('toggle1').length; i++) {
+                                let px = window.getComputedStyle(document.getElementsByClassName('toggle1')[i]).getPropertyValue('left');
+                                document.getElementsByClassName('toggle1')[i].style.left = (parseInt(px.substring(0,px.length-2))+9999).toString();
+                                //document.getElementsByClassName('toggle1')[i].style.left = '9999px';
+                            }
+                            return;
+                        }
+                        if (!displayPreview) {
+                            return;
+                        }
+                        requestAnimationFrame(waitUntilMove);
+                    }
+                    waitUntilMove();
+                    
+                }
+            });
+            window.addEventListener("mouseup", (e) => {
+                //console.log("jingy");
+                displayPreview=false;
+                if (editor) {
+                    // hiding editor menu
+                    for (let i = 0; i<document.getElementsByClassName('toggle1').length; i++) {
+                        let px = window.getComputedStyle(document.getElementsByClassName('toggle1')[i]).getPropertyValue('left');
+                        document.getElementsByClassName('toggle1')[i].style.left = (parseInt(px.substring(0,px.length-2))-9999).toString();
+                    }
+                }
+                if (editor && fDown) {
+                    // creating blocks
+                    if (document.getElementById("seven").checked === true) {
+                        ground.push([
+                            tempP1.x < mouseX ? tempP1.x + scrollX : mouseX + scrollX,
+                            tempP1.y < mouseY ? tempP1.y + scrollY : mouseY + scrollY,
+                            mouseX > tempP1.x ? mouseX - tempP1.x : tempP1.x - mouseX,
+                            mouseY > tempP1.y ? mouseY - tempP1.y : tempP1.y - mouseY,
+                            document.getElementById("two").value,
+                            huamao,
+                            document.getElementById("three").value,
+                            document.getElementById("four").value,
+                            document.getElementById("five").value,
+                            document.getElementById("six").value,
+                            document.getElementById("nine").checked
+                        ]);
+                        console.log("texture pasted");
+                    } else {
+                        ground.push([
+                            tempP1.x < mouseX ? tempP1.x + scrollX : mouseX + scrollX,
+                            tempP1.y < mouseY ? tempP1.y + scrollY : mouseY + scrollY,
+                            mouseX > tempP1.x ? mouseX - tempP1.x : tempP1.x - mouseX,
+                            mouseY > tempP1.y ? mouseY - tempP1.y : tempP1.y - mouseY,
+                            document.getElementById("two").value,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            document.getElementById("nine").checked
+                            
+                            
+                        ]);
+                    }
+                } else if (editor && gDown) {
+                    // moving blocks
+                    for (let i = 0; i < sel.length; i++) {
+                        ground[sel[i]][0] += aMouseX - tempP1.x;
+                        ground[sel[i]][1] += aMouseY - tempP1.y;
+                    }
+                } else if (editor) {
+                    for (let i = 0; i < ground.length; i++) {
+                        // selecting
+                        if (
+                            (tempP1.x < mouseX &&
+                                tempP1.y < mouseY &&
+                                mouseX + scrollX > ground[i][0] &&
+                                tempP1.x + scrollX < ground[i][2] + ground[i][0] &&
+                                mouseY + scrollY > ground[i][1] &&
+                                tempP1.y + scrollY < ground[i][3] + ground[i][[1]]) ||
+                            (tempP1.x > mouseX &&
+                                tempP1.y < mouseY &&
+                                tempP1.x + scrollX > ground[i][0] &&
+                                mouseX + scrollX < ground[i][2] + ground[i][0] &&
+                                mouseY + scrollY > ground[i][1] &&
+                                tempP1.y + scrollY < ground[i][3] + ground[i][[1]]) ||
+                            (tempP1.x < mouseX &&
+                                tempP1.y > mouseY &&
+                                mouseX + scrollX > ground[i][0] &&
+                                tempP1.x + scrollX < ground[i][2] + ground[i][0] &&
+                                tempP1.y + scrollY > ground[i][1] &&
+                                mouseY + scrollY < ground[i][3] + ground[i][[1]]) ||
+                            (tempP1.x > mouseX &&
+                                tempP1.y > mouseY &&
+                                tempP1.x + scrollX > ground[i][0] &&
+                                mouseX + scrollX < ground[i][2] + ground[i][0] &&
+                                tempP1.y + scrollY > ground[i][1] &&
+                                mouseY + scrollY < ground[i][3] + ground[i][[1]])
+                        ) {
+                            console.log(i + " sdasdsa");
+                            if (!(i in sel)) {
+                                console.log(sel);
+                                sel.push(i);
+                            }
+                        }
+                    }
+                }
+            });
+            window.addEventListener("mousemove", (e) => {
+                aMouseX = e.offsetX;
+                aMouseY = e.offsetY;
+                if (document.getElementById("eight").checked === true) {
+                    //mouseX = (Math.round(e.offsetX/32)*32);
+                    //mouseY = (Math.round(e.offsetY/32)*32);
+                    mouseX = (Math.round((e.offsetX+scrollX)/snap)*snap)-scrollX;
+                    mouseY = (Math.round((e.offsetY+scrollY)/snap)*snap)-scrollY;
+                } else {
+                    mouseX = e.offsetX;
+                    mouseY = e.offsetY;
+                    
+                    
+                }
+                
+            });
+
+            function drawrectangle(rx, ry, rw, rh, color, tex = null, sx = null, sy = null, sw = null, sh = null) {
+                if (tex === null) {
+                    ctx.fillStyle = color;
+                    ctx.fillRect((rx - scrollX) * scale, (ry - scrollY) * scale, rw * scale, rh * scale);
+                } else {
+                    ctx.drawImage(tex, sx, sy, sw, sh, (rx - scrollX) * scale, (ry - scrollY) * scale, rw * scale, rh * scale);
+                }
+            }
+
+            function draw() {
+                //drawrectangle(Math.sin(frame/16)*50+50,Math.cos(frame/16)*50+50,50,50,'red')
+                
+                //draw player
+                drawrectangle(playerX, playerY, playerW, playerH, "green");
+
+                //draw ground
+                for (let i = 0; i < ground.length; i++) {
+                    drawrectangle(
+                        ground[i][0],
+                        ground[i][1],
+                        ground[i][2],
+                        ground[i][3],
+                        !sel.includes(i) ? ground[i][4] : "lime",
+                        ground[i].length > 5 ? ground[i][5] : null,
+                        ground[i].length > 5 ? ground[i][6] : null,
+                        ground[i].length > 5 ? ground[i][7] : null,
+                        ground[i].length > 5 ? ground[i][8] : null,
+                        ground[i].length > 5 ? ground[i][9] : null
+                    );
+                }
+                //ctx.fill();
+                
+                //draw selection box
+                if (displayPreview) {
+                    ctx.beginPath();
+                    ctx.moveTo(mouseX,mouseY);
+                    ctx.lineTo(mouseX,tempP1.y);
+                    ctx.lineTo(tempP1.x,tempP1.y);
+                    ctx.lineTo(tempP1.x,mouseY);
+                    ctx.lineTo(mouseX,mouseY);
+                    ctx.lineWidth= 3;
+                    ctx.strokeStyle='green';
+                    ctx.stroke();
+                    console.log('jingineif');
+                    
+                    
+                }
+                // draw grid
+                if ((document.getElementById("eight").checked === true) && editor) {
+                    for (let i = 0; i< 480/snap; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo((Math.round(((i*snap)+scrollX)/snap)*snap)-scrollX,0);
+                        ctx.lineTo((Math.round(((i*snap)+scrollX)/snap)*snap)-scrollX,360);
+                        ctx.lineWidth= 1;
+                        ctx.strokeStyle='rgba(0, 0, 0, 0.5)';
+                        ctx.stroke();
+                        //console.log((Math.round((i+scrollX)/snap)*snap)-scrollX,0);
+                    }
+                    for (let i = 0; i< 360/snap; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(0,(Math.round(((i*snap)+scrollY)/snap)*snap)-scrollY);
+                        ctx.lineTo(480,(Math.round(((i*snap)+scrollY)/snap)*snap)-scrollY);
+                        ctx.lineWidth= 1;
+                        ctx.strokeStyle='rgba(0, 0, 0, 0.5)';
+                        ctx.stroke();
+                        //onsole.log((Math.round((i+scrollX)/snap)*snap)-scrollX,0);
+                    }
+
+                }
+            }
+            function moveOut(x, y) {
+                for (let i = 0; i < ground.length; i++) {
+                    if (ground[i].length < 11 || ground[i].length >= 11 ? !ground[i][10] : true) {
+                        while (
+                            playerX + playerW > ground[i][0] &&
+                            playerX < ground[i][0] + ground[i][2] &&
+                            playerY + playerH > ground[i][1] &&
+                            playerY < ground[i][1] + ground[i][3]
+                        ) {
+                            playerX += x;
+                            playerY += y;
+                        }
+                    }
+                }
+            }
+            function physics() {
+                //gravity
+                velY += 1;
+                playerY += velY;
+                if (velY > 20) {
+                    velY = 20;
+                }
+
+                for (let i = 0; i < ground.length; i++) {
+                    //console.log(i);
+                    
+                    if (ground[i].length < 11 || ground[i].length >= 11 ? !ground[i][10] : true) {
+                    
+                        if (
+                            playerX + playerW > ground[i][0] &&
+                            playerX < ground[i][0] + ground[i][2] &&
+                            playerY + playerH > ground[i][1] &&
+                            playerY < ground[i][1] + ground[i][3]
+                        ) {
+                            //console.log("collision");
+                            if (velY < 0) {
+                                moveOut(0, 1);
+                                velY = 0;
+                            } else {
+                                moveOut(0, -1);
+                                if (wDown) {
+                                    velY = -15;
+                                } else {
+                                    velY = 0;
+                                }
+                            }
+                            //playerY --;
+                        }
+                    }
+                }
+
+                ///walk
+                if (aDown) {
+                    velX += pSpeed * -1;
+                }
+                if (dDown) {
+                    velX += pSpeed;
+                }
+                velX = velX * 0.7;
+                playerX += velX;
+                if (velX > 0) {
+                    moveOut(-1, 0);
+                } else {
+                    moveOut(1, 0);
+                }
+
+                scrollX = scrollOffX + playerX + playerW / 2 - canvas.width / 2;
+                scrollY = scrollOffY + playerY + playerH / 2 - canvas.height / 2;
+
+                if (playerY > 500) {
+                    playerX = 0;
+                    playerY = 0;
+                }
+            }
+            function loop() {
+                requestAnimationFrame((currentTimeMs) => {
+                    const deltaTimeMs = currentTimeMs - previousTimeMs;
+                    if (deltaTimeMs >= frameIntervalMs) {
+                        previousTimeMs = currentTimeMs;
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        physics();
+                        draw();
+
+                        frame += 1;
+                        //console.log(frame);
+                    }
+                    loop();
+                });
+            }
+            loop();
+        </script>
+    </body>
+</html>
