@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <style>
+            .pie {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                background-image: conic-gradient(pink 0deg, transparent 0);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="pie" id="pie1"></div>
+
+        <script>
+            const maxFPS = 60;
+            const frameIntervalMs = 1000 / maxFPS;
+            let previousTimeMs = 0;
+            let pie1 = document.getElementById("pie1");
+            let x = 0;
+            let y = new Date(2025, 12, 26, 04);
+            let z = new Date(2025, 12, 26, 03);
+            let a;
+            console.log(y.valueOf());
+            console.log(z.valueOf());
+            console.log(Date.now());
+            console.log(Date.now() - z.valueOf());
+
+            function loop() {
+                requestAnimationFrame((currentTimeMs) => {
+                    const deltaTimeMs = currentTimeMs - previousTimeMs;
+                    if (deltaTimeMs >= frameIntervalMs) {
+                        previousTimeMs = currentTimeMs;
+                        //console.log(x);
+                        a = (Date.now() - z.valueOf()) / (y.valueOf() - z.valueOf());
+                        pie1.style.backgroundImage = "conic-gradient(pink " + a + "deg, transparent 0)";
+                        x += 1;
+                        //console.log(a);
+                    }
+                    loop();
+                });
+            }
+
+            loop();
+        </script>
+    </body>
+</html>
