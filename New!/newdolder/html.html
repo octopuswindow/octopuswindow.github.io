@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <style>
+            canvas {
+                outline: solid;
+                outline-color: black;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" class="canvas" width="480" height="360"></canvas>
+
+        <script>
+            let canvas = document.querySelector("#canvas");
+            let ctx = canvas.getContext("2d");
+
+            let rows = 20; // amout of notes
+            let rowHeight = canvas.height / rows; // height of the note bars
+            let rowOffset = 59; // octave slider thing (12 is an octave) (59 = middle c at bottom)
+            let columns = 8; // the note dividers
+            let columnWidth = canvas.width / columns; // note divider width
+            let penWidth = 1 / 2; // width of the pen (in beats)
+            let penSnapSize = 1 / 2; //how often the note snaps to the grid (size of snap) (in beats)
+            let penNote; // note that the pen is on
+            let penLoc; // location pen is at on x, divided into beats
+            let mx, my; // mouse x and y
+            let notes = [[0,0,0]]; // section midi file basically
+            let sections = []; // list of sections (full midi file)
+            let cursorNote = null; // the note currently under the mouse
+
+            function render() {
+                ctx.fillStyle = "blue";
+                ctx.fillRect(20, 20, 50, 50);
+                for (let i = 0; i < rows; i++) {
+                    ctx.fillStyle = i % 2 == 0 ? "teal" : "turquoise";
+                    ctx.fillRect(0, i * rowHeight, canvas.width, rowHeight);
+                    ctx.fillStyle = "Black";
+                    ctx.fillRect(0, i * rowHeight, canvas.width, 2);
+                }
+                for (let i = 0; i < columns; i++) {
+                    ctx.fillStyle = "Black";
+                    ctx.fillRect(i * columnWidth, 0, 2, canvas.height);
+                }
+            }
+            function renderpen() {
+                penNote = 0 - Math.floor(my / rowHeight) + rows + rowOffset;
+                penLoc = Math.floor(((mx / canvas.width) * columns) / penSnapSize) * penSnapSize;
+                console.log(penNote, 0 - (penNote - rowOffset - rows), penLoc);
+                ctx.fillStyle = "rgb(255,255,255,0.5)";
+                ctx.fillRect(
+                    Math.floor(mx / (columnWidth * penSnapSize)) * (columnWidth * penSnapSize),
+                    Math.floor(my / rowHeight) * rowHeight,
+                    columnWidth * penWidth,
+                    rowHeight
+                );
+            }
+            function rendernotes() {
+                cursorNote = null;
+                ctx.fillStyle = "white";
+                for (let i = 0; i < notes.length; i++) {
+                    let noteX = notes[i][1] * columnWidth;
+                    let noteY = 0 - (notes[i][0] - rowOffset - rows) * rowHeight;
+                    let noteW = notes[i][2] * columnWidth;
+                    let noteH = rowHeight;
+                    ctx.fillRect(noteX, noteY, noteW, noteH);
+                    if (mx > noteX && mx < noteX + noteW && my > noteY && my < noteY + noteH) {
+                        console.log("toughing note");
+                        cursorNote = i;
+                    }
+                }
+            }
+            render();
+
+            /*
+            window.addEventListener("mousemove", function(e) {
+                console.log(e.clientX + " " + e.clientY);
+            });
+            */
+
+            canvas.onmousemove = function (e) {};
+            canvas.onmousedown = function (e) {
+                if (!cursorNote) {
+                    notes.push([penNote, penLoc, penWidth]);
+                    console.log([penNote, penLoc, penWidth]);
+                } else {
+                    notes.splice(cursorNote, 1);
+                    console.log("attempted to remove note");
+                }
+            };
+            window.onmousemove = function (e) {
+                //console.log(e.target.className=="canvas");
+                let r = e.target.getBoundingClientRect();
+                mx = e.clientX - r.left;
+                my = e.clientY - r.top;
+                //console.log(mx + " " + my);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                render();
+                rendernotes();
+                if (e.target.className == "canvas") {
+                    renderpen();
+                }
+            };
+        </script>
+    </body>
+</html>
