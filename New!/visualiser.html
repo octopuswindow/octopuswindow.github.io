@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>visualiser</title>
+        <style>
+            canvas {
+                width: 100%;
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+    <input type="file" id="a">
+        <canvas id="canvas"></canvas>
+    <script>
+        document.getElementById("a").addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            
+            const reader = new FileReader();
+            
+            reader.addEventListener("load", (event) => {
+                console.log(event);
+                const arraybuffer = event.target.result;
+                const audiocontext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                audiocontext.decodeAudioData(arraybuffer, (audioBuffer) => {
+                    console.log(audioBuffer);
+                    visualize(audioBuffer);
+                });
+                
+            })
+            
+            reader.readAsArrayBuffer(file);
+            console.log("hi");
+            console.log(file.name);
+        });
+        
+        function visualize(audioBuffer) {
+            const canvas = document.getElementById("canvas");
+            const canvascontext = canvas.getContext('2d');
+            
+            canvas.width=800;
+            canvas.height=200;
+            
+            const channeldata = audioBuffer.getChannelData(0);
+            console.log(channeldata);
+            
+            const numberofchunks = 400;
+            const chunksize = Math.ceil(channeldata.length / numberofchunks);
+            
+            canvascontext.fillStyle = "#5271FF";
+            //canvascontext.fillRect(0,0,canvas.width,canvas.height);
+            console.log(canvas.width, canvas.height)
+            
+            const center = canvas.height/2;
+            const barwidth = canvas.width/numberofchunks;
+            
+            for (let i = 0; i < numberofchunks; i++) {
+                const chunk = channeldata.slice(i*chunksize, (i+1)*chunksize);
+                const min = Math.min(...chunk)*20;
+                const max = Math.max(...chunk)*20;
+                console.log(min, max);
+                
+                canvascontext.fillRect(i*barwidth, center-max, barwidth, max+Math.abs(min))
+                
+            }
+            
+            
+        }
+        
+        
+        </script>
+    </body>
+</html>
