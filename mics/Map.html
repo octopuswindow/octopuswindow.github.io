@@ -42,6 +42,14 @@
 
     </canvas>
     <select id="selector1" onchange="Change();">
+        <optgroup label="FSMP2">
+            <option value="FSMP2-o-d">FSMP2 [rsc]</option>
+            <option value="FSMP2-o-d1">FSMP2 [swim]</option>
+        </optgroup>
+
+        <optgroup label="FSMP1">
+            <option value="FSMP1-o-d">FSMP1 [swim]</option>
+        </optgroup>
 
         <optgroup label="SE5">
             <option value="SE5-o-d">SE5 [swim]</option>
@@ -62,12 +70,7 @@
         <optgroup label="SE1">
             <option value="SE1-o-d">SE1 [shark]</option>
         </optgroup>
-        <optgroup label="FSMP1">
-            <option value="FSMP1-o-d">FSMP1 [swim]</option>
-        </optgroup>
-        <optgroup label="FSMP2">
-            <option value="FSMP2-o-d">FSMP2 [swim]</option>
-        </optgroup>
+
 
         <optgroup label="click map to copy">
         </optgroup>
@@ -85,6 +88,25 @@
         let offx = 2583;
         let offy = 3061;
 
+        let x = 0;
+        let y = 0;
+        let mx;
+        let my;
+        let notmove = false;
+
+        let urlstr = window.location.href;
+        let paramstr = urlstr.split('?')[1];
+        let querystr = new URLSearchParams(paramstr);
+        for (let qusr of querystr.entries()) {
+            console.log(qusr[0]);
+            console.log(qusr[1]);
+            if (qusr[0] == "map") {
+                document.querySelector('#selector1').value = qusr[1];
+                Change();
+            }
+        }
+
+
         mapimage.onload = function () {
             console.log(this.width + "x" + this.height);
             w = this.width;
@@ -101,13 +123,25 @@
             }
 
             Draw();
+
+            urlstr = window.location.href;
+            paramstr = urlstr.split('?')[1];
+            querystr = new URLSearchParams(paramstr);
+            querystr.set("map", document.querySelector('#selector1').value);
+            console.log(querystr.toString());
+
+            if (document.location.href != urlstr.split('?')[0] + "?" + querystr.toString()) {
+                document.location.href = urlstr.split('?')[0] + "?" + querystr.toString()
+            }
+
+            //document.location.href = urlstr.split('?')[0] + "?" + querystr.toString();
         };
-        mapimage.src = "2025-02-17_18.51.39_x-2560_z-3072.png";
-        let x = 0;
-        let y = 0;
-        let mx;
-        let my;
-        let notmove = false;
+
+        if (mapimage.src == "") {
+            mapimage.src = "2025-02-17_18.51.39_x-2560_z-3072.png";
+        }
+
+
         console.dir(canvas);
         window.addEventListener("resize", function () {
             console.log("dffdsfds");
@@ -199,8 +233,8 @@
                 let poy = Math.round(((mapimage.height / h) * (my - y)) - offy);
                 //console.log(toString(pox));
                 //console.log(my);
-                navigator.clipboard.writeText("x: " + pox.toString() + " y: " + poy.toString());
-                alert("copied coordinates to clipboard");
+                navigator.clipboard.writeText("x: " + pox.toString() + " z: " + poy.toString());
+                alert("copied (approximate) coordinates to clipboard");
             }
             //console.log("up");
         });
@@ -223,37 +257,42 @@
             x = 0;
             y = 0;
             if (jjjjj === "SE5-o-d") {
-                mapimage.src = "2025-02-17_18.51.39_x-2560_z-3072.png";
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/2025-02-17_18.51.39_x-2560_z-3072.png";
                 offx = 2583;
                 offy = 3061;
                 console.log()
             } else if (jjjjj === "SE4-o-d") {
-                mapimage.src = "se4map.png";
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/se4map.png";
                 offx = 3024;
                 offy = 2643;
 
             } else if (jjjjj === "SE3-o-d") {
-                mapimage.src = "se3map.png";
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/se3map.png";
                 offx = 2000;
                 offy = 2000;
 
             } else if (jjjjj === "SE2-o-d") {
-                mapimage.src = "se2map.png";
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/se2map.png";
                 offx = 3000;
                 offy = 3000;
 
             } else if (jjjjj === "SE1-o-d") {
-                mapimage.src = "se1map.png";
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/se1map.png";
                 offx = 3585;
                 offy = 2105;
 
             } else if (jjjjj === "FSMP1-o-d") {
-                mapimage.src = "fsmpmap1.png";
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/fsmpmap1.png";
                 offx = 6102;
                 offy = 3025;
 
             } else if (jjjjj === "FSMP2-o-d") {
-                mapimage.src = "fsmp2map.png";
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/fsmp2map.png";
+                offx = 3361;
+                offy = 3249;
+
+            } else if (jjjjj === "FSMP2-o-d1") {
+                mapimage.src = "https://file.garden/am9GZY7l3hw3npk3/maps/fsmp2map1.png";
                 offx = 3217;
                 offy = 1777;
 
