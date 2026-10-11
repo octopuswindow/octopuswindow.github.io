@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tux image fit</title>
+    <style>
+        #canvas1 {
+            /*
+            outline: 2px rgb(0, 0, 0) solid;
+            width: 608px;
+            height: 472px;
+            */
+
+
+
+            width: 0px;
+            height: 0px;
+
+        }
+    </style>
+    <link rel="stylesheet" href="all.css">
+</head>
+
+<body>
+    <p>Tux image fit</p>
+    <input type="file" name="file" id="file">
+    <br>
+    <canvas id="canvas1"></canvas>
+    <img src="" alt="" id="jj">
+
+    <script>
+
+        const tuxheight = 472;
+        const tuxwidth = 608;
+        const tuxaspect = tuxwidth / tuxheight;
+        let filein = document.getElementById('file');
+        console.log("hi guys");
+        let fr = new FileReader();
+        let canvas = document.querySelector('canvas');
+        let ctx = canvas.getContext('2d')
+        canvas.height = tuxheight;
+        canvas.width = tuxwidth;
+
+
+
+
+        //ctx.fillStyle = "rgb(200 0 0)";
+        //ctx.fillRect(50, 50, 10, 10);
+
+        fr.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.getElementById("jj").src = fr.result;
+            let img = new Image;
+            img.src = fr.result;
+            img.addEventListener('load', () => {
+                let w = img.width; //resized image width
+                let h = img.height; //resized image height
+
+                let ox = 0; //image x offset on canvas
+                let oy = 0; //image y offset on canvas
+
+
+                if (tuxaspect < w / h) {
+                    h = h * (tuxwidth / w);
+                    w = tuxwidth;
+                    oy = (tuxheight / 2) - (h / 2);
+                    console.log("a");
+                } else if (tuxaspect > w / h) {
+                    w = w * (tuxheight / h);
+                    h = tuxheight;
+                    ox = (tuxwidth / 2) - (w / 2);
+                    console.log("b");
+                } else {
+                    w = tuxwidth;
+                    h = tuxheight;
+                }
+                ox = Math.round(ox);
+                oy = Math.round(oy);
+                w = Math.round(w);
+                h = Math.round(h);
+
+                let sw, sh;
+
+                console.log(w, h);
+
+                ctx.drawImage(img, ox, oy, w, h);
+
+                let imgdat = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                console.log(imgdat.data);
+
+                //for (let i = 0; i < imgdat.data.length; i += 4) {
+                //    imgdat.data[i] = 50;
+                //console.log("gi")
+                //}
+
+                function getpixel(inx, iny) {
+                    let out = {};
+                    out.r = imgdat.data[(inx + (iny * tuxwidth)) * 4];
+                    out.g = imgdat.data[((inx + (iny * tuxwidth)) * 4) + 1];
+                    out.b = imgdat.data[((inx + (iny * tuxwidth)) * 4) + 2];
+                    out.a = imgdat.data[((inx + (iny * tuxwidth)) * 4) + 3];
+                    return out;
+
+
+                }
+
+                function setpixel(inx, iny, inr, ing, inb, ina) {
+                    imgdat.data[(inx + (iny * tuxwidth)) * 4] = inr;
+                    imgdat.data[((inx + (iny * tuxwidth)) * 4) + 1] = ing;
+                    imgdat.data[((inx + (iny * tuxwidth)) * 4) + 2] = inb;
+                    imgdat.data[((inx + (iny * tuxwidth)) * 4) + 3] = ina;
+                }
+
+                //this is where i put the image stretching code
+                if (tuxaspect < w / h) {
+                    console.log("wider");
+                    for (let ix = 0; ix < tuxwidth; ix++) {
+                        let endpcolor = getpixel(ix, oy);
+                        for (let iy = 0; iy < oy; iy++) {
+                            setpixel(ix, iy, endpcolor.r, endpcolor.g, endpcolor.b, endpcolor.a);
+                        }
+                    }
+
+                    for (let ix = 0; ix < tuxwidth; ix++) {
+                        let endpcolor = getpixel(ix, oy + h - 1);
+                        for (let iy = oy + h; iy < tuxheight; iy++) {
+                            setpixel(ix, iy, endpcolor.r, endpcolor.g, endpcolor.b, endpcolor.a);
+                        }
+                    }
+
+
+                } else if (tuxaspect > w / h) {
+                    console.log("taller");
+                    for (let iy = 0; iy < tuxheight; iy++) {
+                        let endpcolor = getpixel(ox, iy);
+                        for (let ix = 0; ix < ox; ix++) {
+                            setpixel(ix, iy, endpcolor.r, endpcolor.g, endpcolor.b, endpcolor.a);
+                        }
+                    }
+
+                    for (let iy = 0; iy < tuxheight; iy++) {
+                        let endpcolor = getpixel(ox + w - 1, iy);
+                        for (let ix = ox + w; ix < tuxwidth; ix++) {
+                            setpixel(ix, iy, endpcolor.r, endpcolor.g, endpcolor.b, endpcolor.a);
+                        }
+                    }
+                }
+
+                ctx.putImageData(imgdat, 0, 0);
+                let out = new Image()
+                out.src = canvas.toDataURL();
+                document.getElementById("jj").src = out.src;
+                console.log(out.src);
+
+                //this is the code that i stole from some random ai website that saves the canvas to a file
+                const dataurl = canvas.toDataURL("image/png");
+                const l = document.createElement("a");
+                l.href = dataurl;
+                l.download = "hi.png";
+                document.body.appendChild(l);
+                l.click();
+                document.body.removeChild(l);
+
+
+            });
+
+        };
+
+        filein.addEventListener("input", (event) => {
+
+            let a = filein.files[0];
+            console.log(a);
+            fr.readAsDataURL(a);
+
+
+        });
+
+    </script>
+</body>
+
+</html>
