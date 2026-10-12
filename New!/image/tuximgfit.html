@@ -5,25 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tux image fit</title>
-    <style>
-        #canvas1 {
-            /*
-            outline: 2px rgb(0, 0, 0) solid;
-            width: 608px;
-            height: 472px;
-            */
-
-
-
-            width: 0px;
-            height: 0px;
-
-        }
-    </style>
     <link rel="stylesheet" href="all.css">
 </head>
 
 <body>
+    <a href="image.html">back</a>
     <p>Tux image fit</p>
     <input type="file" name="file" id="file">
     <br>
@@ -36,10 +22,10 @@
         const tuxwidth = 608;
         const tuxaspect = tuxwidth / tuxheight;
         let filein = document.getElementById('file');
-        console.log("hi guys");
+        console.log("hi guys get ready for tuximgfit!");
         let fr = new FileReader();
         let canvas = document.querySelector('canvas');
-        let ctx = canvas.getContext('2d')
+        let ctx = canvas.getContext('2d');
         canvas.height = tuxheight;
         canvas.width = tuxwidth;
 
@@ -66,12 +52,12 @@
                     h = h * (tuxwidth / w);
                     w = tuxwidth;
                     oy = (tuxheight / 2) - (h / 2);
-                    console.log("a");
+                    //console.log("a");
                 } else if (tuxaspect > w / h) {
                     w = w * (tuxheight / h);
                     h = tuxheight;
                     ox = (tuxwidth / 2) - (w / 2);
-                    console.log("b");
+                    //console.log("b");
                 } else {
                     w = tuxwidth;
                     h = tuxheight;
@@ -83,12 +69,12 @@
 
                 let sw, sh;
 
-                console.log(w, h);
+                //console.log(w, h);
 
                 ctx.drawImage(img, ox, oy, w, h);
 
                 let imgdat = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                console.log(imgdat.data);
+                //console.log(imgdat.data);
 
                 //for (let i = 0; i < imgdat.data.length; i += 4) {
                 //    imgdat.data[i] = 50;
@@ -115,7 +101,7 @@
 
                 //this is where i put the image stretching code
                 if (tuxaspect < w / h) {
-                    console.log("wider");
+                    //console.log("wider");
                     for (let ix = 0; ix < tuxwidth; ix++) {
                         let endpcolor = getpixel(ix, oy);
                         for (let iy = 0; iy < oy; iy++) {
@@ -132,7 +118,7 @@
 
 
                 } else if (tuxaspect > w / h) {
-                    console.log("taller");
+                    //console.log("taller");
                     for (let iy = 0; iy < tuxheight; iy++) {
                         let endpcolor = getpixel(ox, iy);
                         for (let ix = 0; ix < ox; ix++) {
@@ -152,13 +138,13 @@
                 let out = new Image()
                 out.src = canvas.toDataURL();
                 document.getElementById("jj").src = out.src;
-                console.log(out.src);
+                //console.log(out.src);
 
                 //this is the code that i stole from some random ai website that saves the canvas to a file
                 const dataurl = canvas.toDataURL("image/png");
                 const l = document.createElement("a");
                 l.href = dataurl;
-                l.download = "hi.png";
+                l.download = "tuximgfitted" + String(Math.round(Math.random() * 99999999999)) + ".png";
                 document.body.appendChild(l);
                 l.click();
                 document.body.removeChild(l);
@@ -171,7 +157,7 @@
         filein.addEventListener("input", (event) => {
 
             let a = filein.files[0];
-            console.log(a);
+            //console.log(a);
             fr.readAsDataURL(a);
 
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="all.css">
+    <style>
+        #canvas2 {
+            border: 2px, black, solid;
+            width: 608px;
+            height: 472px;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="image.html">back</a>
+    <p>Tux rescaler</p>
+    <input type="file" name="file" id="file">
+    <br>
+    <p>size multiplier:</p><input type="number" name="" id="markiplier" value="2">
+    <br>
+    <canvas id="canvas1"></canvas>
+    <img src="" alt="" id="jj">
+
+    <script>
+
+        let tuxheight = 472;
+        let tuxwidth = 608;
+        //const tuxaspect = tuxwidth / tuxheight;
+        let filein = document.getElementById('file');
+        console.log("hi guys get ready for tuxrescaler!");
+        let fr = new FileReader();
+        let canvas = document.querySelector('canvas');
+        let ctx = canvas.getContext('2d');
+
+        canvas.width = tuxwidth;
+        canvas.height = tuxheight;
+
+        fr.onload = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            //document.getElementById("jj").src = fr.result;
+            let img = new Image;
+            img.src = fr.result;
+            img.addEventListener('load', () => {
+                tuxwidth = img.width;
+                tuxheight = img.height;
+
+                const mult = document.getElementById("markiplier").value;
+                canvas.width = tuxwidth *= mult;
+                canvas.height = tuxheight *= mult;
+
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(img, 0, 0, tuxwidth, tuxheight);
+                //console.log(tuxwidth, tuxheight);
+
+                let out = new Image()
+                out.src = canvas.toDataURL();
+                document.getElementById("jj").src = out.src;
+                //console.log(out.src);
+
+                const dataurl = canvas.toDataURL("image/png");
+                const l = document.createElement("a");
+                l.href = dataurl;
+                l.download = "tuxrescaled" + String(Math.round(Math.random() * 99999999999)) + ".png";
+                document.body.appendChild(l);
+                l.click();
+                document.body.removeChild(l);
+            });
+        };
+
+
+        filein.addEventListener("input", (event) => {
+
+            let a = filein.files[0];
+            //console.log(a);
+            fr.readAsDataURL(a);
+
+
+        });
+
+    </script>
+</body>
+
+</html>
